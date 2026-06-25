@@ -8,26 +8,16 @@ const Globe = dynamic(() => import('react-globe.gl'), { ssr: false })
 
 const SARAWAK = { lat: 1.5533, lng: 110.3592 }
 
-interface TooltipInfo {
-  name: string
-  city: string
-  country: string
-  message: string
-  x: number
-  y: number
-}
-
 export default function GlobalMap() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [dims, setDims] = useState({ w: 800, h: 560 })
-  const [tooltip, setTooltip] = useState<TooltipInfo | null>(null)
+  const [renderDims, setRenderDims] = useState({ w: 800, h: 560 })
 
   useEffect(() => {
     const update = () => {
       if (!containerRef.current) return
       const w = Math.min(containerRef.current.offsetWidth - 40, 960)
       const h = window.innerWidth < 768 ? 380 : 600
-      setDims({ w, h })
+      setRenderDims({ w, h })
     }
     update()
     window.addEventListener('resize', update)
@@ -39,12 +29,11 @@ export default function GlobalMap() {
     startLng: m.longitude,
     endLat: SARAWAK.lat,
     endLng: SARAWAK.lng,
-    color: ['rgba(255,215,0,0.95)', 'rgba(232,25,44,0.95)'],
+    color: ['rgba(255,215,0,0.9)', 'rgba(232,25,44,0.9)'],
   }))
 
   return (
     <section id="global-map" className="section-pad" style={{ background: '#090912', position: 'relative', overflow: 'hidden' }}>
-      {/* Background glow */}
       <div style={{
         position: 'absolute', top: '50%', left: '50%',
         transform: 'translate(-50%,-50%)',
@@ -76,8 +65,8 @@ export default function GlobalMap() {
           style={{ padding: '1.25rem', display: 'flex', justifyContent: 'center', position: 'relative' }}
         >
           <Globe
-            width={dims.w}
-            height={dims.h}
+            width={renderDims.w}
+            height={renderDims.h}
             backgroundColor="rgba(0,0,0,0)"
             globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
             atmosphereColor="#E8192C"
@@ -87,38 +76,42 @@ export default function GlobalMap() {
             arcDashLength={0.4}
             arcDashGap={0.18}
             arcDashAnimateTime={2200}
-            arcStroke={0.7}
+            arcStroke={0.6}
             htmlElementsData={MOCK_MESSAGES}
             htmlLat={(d: object) => (d as typeof MOCK_MESSAGES[0]).latitude}
             htmlLng={(d: object) => (d as typeof MOCK_MESSAGES[0]).longitude}
             htmlElement={(d: object) => {
               const m = d as typeof MOCK_MESSAGES[0]
-              const el = document.createElement('div')
-              el.className = 'globe-heart'
-              el.innerHTML = '❤️'
-              el.style.cssText = 'font-size:22px; cursor:pointer;'
-              el.addEventListener('mouseenter', (e) => {
-                const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
-                setTooltip({ name: m.name, city: m.city, country: m.country, message: m.message, x: r.left + r.width / 2, y: r.top })
-              })
-              el.addEventListener('mouseleave', () => setTooltip(null))
-              return el
+              const wrap = document.createElement('div')
+              wrap.style.cssText = 'display:flex; flex-direction:column; align-items:center; pointer-events:none; gap:3px;'
+
+              const dot = document.createElement('div')
+              dot.style.cssText = `
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                background: #E8192C;
+                box-shadow: 0 0 6px 3px rgba(232,25,44,0.55), 0 0 14px 6px rgba(232,25,44,0.2);
+                animation: heartPulse 2.2s ease-in-out infinite;
+              `
+
+              const label = document.createElement('span')
+              label.textContent = m.city
+              label.style.cssText = `
+                font-size: 8.5px;
+                font-family: Inter, sans-serif;
+                color: rgba(245,240,232,0.72);
+                white-space: nowrap;
+                letter-spacing: 0.4px;
+                text-shadow: 0 1px 5px rgba(0,0,0,1), 0 0 8px rgba(0,0,0,0.8);
+              `
+
+              wrap.appendChild(dot)
+              wrap.appendChild(label)
+              return wrap
             }}
             enablePointerInteraction={true}
           />
-
-          {tooltip && (
-            <div style={{ position: 'fixed', left: tooltip.x, top: tooltip.y - 12, transform: 'translate(-50%,-100%)', zIndex: 9999, pointerEvents: 'none' }}>
-              <div className="glass" style={{ padding: '12px 16px', maxWidth: 240, borderRadius: 14, boxShadow: '0 12px 40px rgba(0,0,0,0.6)', fontSize: '0.82rem' }}>
-                <div style={{ color: '#FFD700', fontWeight: 700, marginBottom: 4 }}>{tooltip.name}</div>
-                <div style={{ color: 'rgba(245,240,232,0.5)', fontSize: '0.74rem', marginBottom: 6 }}>📍 {tooltip.city}, {tooltip.country}</div>
-                <div style={{ color: 'rgba(245,240,232,0.8)', lineHeight: 1.5 }}>
-                  &ldquo;{tooltip.message.slice(0, 90)}{tooltip.message.length > 90 ? '...' : ''}&rdquo;
-                </div>
-              </div>
-              <div style={{ width: 10, height: 10, background: 'rgba(255,255,255,0.035)', border: '1px solid rgba(255,215,0,0.15)', transform: 'rotate(45deg)', margin: '-5px auto 0', borderTop: 'none', borderLeft: 'none' }} />
-            </div>
-          )}
         </motion.div>
 
         <motion.p
@@ -128,7 +121,7 @@ export default function GlobalMap() {
           transition={{ delay: 0.5 }}
           style={{ textAlign: 'center', color: 'rgba(245,240,232,0.2)', fontSize: '0.78rem', marginTop: '1rem' }}
         >
-          {MOCK_MESSAGES.length} love messages · Drag to explore · Hover hearts for messages
+          {MOCK_MESSAGES.length} love messages · Drag to explore
         </motion.p>
       </div>
     </section>
