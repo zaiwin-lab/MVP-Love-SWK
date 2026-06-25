@@ -3,17 +3,20 @@ import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import { MOCK_MESSAGES } from '@/lib/mockData'
+import { useLang } from '@/contexts/LanguageContext'
+import { T } from '@/lib/translations'
 
 const Globe = dynamic(() => import('react-globe.gl'), { ssr: false })
 
 const SARAWAK = { lat: 1.5533, lng: 110.3592 }
 
-const words = ['Kamek', 'Sayang', 'Sarawak']
-
 export default function Hero() {
   const starsRef = useRef<HTMLDivElement>(null)
   const [globeReady, setGlobeReady] = useState(false)
   const [dimensions, setDimensions] = useState({ w: 1200, h: 700 })
+  const { t } = useLang()
+
+  const words = t(T.hero.title) as string[]
 
   useEffect(() => {
     // Build star field
@@ -65,7 +68,7 @@ export default function Hero() {
       className="relative overflow-hidden"
       style={{
         minHeight: '100vh',
-        background: 'radial-gradient(ellipse at 50% 30%, #1a050a 0%, #080810 65%)',
+        background: 'radial-gradient(ellipse at 50% 30%, #3D0010 0%, #1a0205 60%, #08010a 100%)',
       }}
     >
       {/* Star field */}
@@ -163,7 +166,7 @@ export default function Hero() {
           }}
         >
           <span style={{ animation: 'heartPulse 2s infinite', display: 'inline-block' }}>❤️</span>
-          A Global Love Letter
+          {t(T.hero.eyebrow) as string}
         </motion.div>
 
         {/* Main title — word by word stagger */}
@@ -180,7 +183,7 @@ export default function Hero() {
         >
           {words.map((word, i) => (
             <motion.span
-              key={word}
+              key={`${word}-${i}`}
               initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.9, delay: 0.6 + i * 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -193,7 +196,7 @@ export default function Hero() {
                 WebkitTextFillColor: i === 2 ? 'transparent' : undefined,
                 backgroundClip: i === 2 ? 'text' : undefined,
                 animation: i === 2 ? 'shimmer 5s linear infinite' : undefined,
-                marginRight: i < 2 ? '0.3em' : 0,
+                marginRight: i < words.length - 1 ? '0.3em' : 0,
               }}
             >
               {word}
@@ -215,7 +218,7 @@ export default function Hero() {
             fontWeight: 500,
           }}
         >
-          One Sarawak · One World · One Heart
+          {t(T.hero.tagline) as string}
         </motion.p>
 
         {/* Divider */}
@@ -232,7 +235,7 @@ export default function Hero() {
           }}
         />
 
-        {/* Tagline */}
+        {/* Quote */}
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -245,7 +248,7 @@ export default function Hero() {
             maxWidth: 500,
           }}
         >
-          &ldquo;Every message is a love note carried by the wind back to Sarawak.&rdquo;
+          {t(T.hero.quote) as string}
         </motion.p>
 
         {/* CTA button */}
@@ -271,7 +274,7 @@ export default function Hero() {
           >
             ❤️
           </motion.span>
-          Leave Your Love Message
+          {t(T.hero.cta) as string}
         </motion.button>
 
         {/* Scroll indicator */}
@@ -295,7 +298,7 @@ export default function Hero() {
               textTransform: 'uppercase',
             }}
           >
-            <span>Explore</span>
+            <span>{t(T.hero.scroll) as string}</span>
             <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
               <path d="M8 2v20M2 16l6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>

@@ -11,17 +11,17 @@ export default function SubmissionFormSection() {
   return (
     <section
       id="submission-form"
-      className="section-pad"
+      className="section-pad bg-pattern"
       style={{
-        background: '#0c0c18',
+        background: '#FFF5EC',
         position: 'relative',
         overflow: 'hidden',
       }}
     >
-      {/* Background atmosphere */}
+      {/* Subtle warm atmosphere */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'radial-gradient(ellipse at 50% 0%, rgba(232,25,44,0.08) 0%, transparent 60%)',
+        background: 'radial-gradient(ellipse at 50% 0%, rgba(204,16,32,0.05) 0%, transparent 60%)',
         pointerEvents: 'none',
       }} />
 

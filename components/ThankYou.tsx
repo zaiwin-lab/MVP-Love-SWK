@@ -1,6 +1,8 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { useLang } from '@/contexts/LanguageContext'
+import { T } from '@/lib/translations'
 
 interface Props {
   data: Record<string, unknown>
@@ -10,23 +12,27 @@ interface Props {
 const HEART_POSITIONS = [8, 18, 29, 40, 51, 62, 73, 84, 92, 5, 35, 65]
 
 export default function ThankYou({ data, onReset }: Props) {
+  const { t } = useLang()
+  const [copied, setCopied] = useState(false)
+
   const name = data.name as string | undefined
   const city = data.city as string
   const country = data.country as string
   const url = typeof window !== 'undefined' ? window.location.href : 'https://kameknusamapalove.com'
-  const shareText = `❤️ I just added my love message to Sarawak on the Kamek Sayang Sarawak Global Love Map. Add yours here: ${url} #KamekSayangSarawak #HariSarawak`
+  const shareText = (t(T.thankyou.shareMsg) as string).replace('{url}', url)
 
   // Auto-scroll to map after 4s
   useEffect(() => {
-    const t = setTimeout(() => {
+    const timer = setTimeout(() => {
       document.getElementById('global-map')?.scrollIntoView({ behavior: 'smooth' })
     }, 4500)
-    return () => clearTimeout(t)
+    return () => clearTimeout(timer)
   }, [])
 
   const copyLink = async () => {
     await navigator.clipboard.writeText(url)
-    // Brief visual feedback via title momentarily changing
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }
 
   return (
@@ -59,7 +65,7 @@ export default function ThankYou({ data, onReset }: Props) {
         initial={{ opacity: 0, y: 28, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.3, type: 'spring', stiffness: 200, damping: 25 }}
-        className="glass"
+        className="glass-light"
         style={{ padding: 'clamp(2rem, 5vw, 3.5rem)', position: 'relative', zIndex: 20 }}
       >
         {/* Big animated heart */}
@@ -77,36 +83,35 @@ export default function ThankYou({ data, onReset }: Props) {
             fontSize: 'clamp(1.6rem, 4vw, 2.4rem)',
             fontWeight: 800,
             fontStyle: 'italic',
-            color: '#FFD700',
+            color: '#CC1020',
             marginBottom: '1rem',
           }}
         >
-          {name ? `Thank you, ${name}!` : 'Your love is on the map!'}
+          {name ? `Thank you, ${name}!` : (t(T.thankyou.heading) as string)}
         </h2>
 
         <p style={{
           fontSize: 'clamp(1rem, 1.8vw, 1.1rem)',
-          color: 'rgba(245,240,232,0.8)',
+          color: '#4A1A1A',
           lineHeight: 1.8,
           marginBottom: '0.75rem',
           maxWidth: 460,
           margin: '0 auto 0.75rem',
         }}>
-          Your message is now part of the{' '}
-          <strong style={{ color: '#E8192C' }}>Global Love Letter to Sarawak.</strong>
+          {t(T.thankyou.sub) as string}
         </p>
 
-        <p style={{ color: '#FFD700', fontWeight: 600, fontSize: '1rem', marginBottom: '0.5rem' }}>
-          Your love pin glows from <strong>{city}, {country}</strong> 🌟
+        <p style={{ color: '#CC1020', fontWeight: 600, fontSize: '1rem', marginBottom: '0.5rem' }}>
+          {t(T.thankyou.pin) as string} <strong>{city}, {country}</strong> 🌟
         </p>
 
-        <p style={{ color: 'rgba(245,240,232,0.35)', fontSize: '0.82rem', marginBottom: '2rem' }}>
+        <p style={{ color: '#9A5A5A', fontSize: '0.82rem', marginBottom: '2rem' }}>
           Your message will appear on the map shortly after review. 💛
         </p>
 
         {/* Share buttons */}
-        <p style={{ color: 'rgba(245,240,232,0.45)', fontSize: '0.8rem', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>
-          Spread the love
+        <p style={{ color: '#9A5A5A', fontSize: '0.8rem', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>
+          {t(T.thankyou.share) as string}
         </p>
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '1.75rem' }}>
           <a
@@ -124,10 +129,9 @@ export default function ThankYou({ data, onReset }: Props) {
               display: 'flex',
               alignItems: 'center',
               gap: 7,
-              transition: 'opacity 0.2s',
             }}
           >
-            💬 WhatsApp
+            💬 {t(T.thankyou.whatsapp) as string}
           </a>
           <a
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
@@ -146,14 +150,14 @@ export default function ThankYou({ data, onReset }: Props) {
               gap: 7,
             }}
           >
-            📘 Facebook
+            📘 {t(T.thankyou.facebook) as string}
           </a>
           <button
             onClick={copyLink}
             style={{
-              background: 'rgba(255,215,0,0.12)',
-              border: '1px solid rgba(255,215,0,0.4)',
-              color: '#FFD700',
+              background: copied ? 'rgba(204,16,32,0.12)' : 'rgba(204,16,32,0.08)',
+              border: '1px solid rgba(204,16,32,0.25)',
+              color: '#CC1020',
               borderRadius: 99,
               padding: '11px 22px',
               fontWeight: 700,
@@ -162,9 +166,10 @@ export default function ThankYou({ data, onReset }: Props) {
               display: 'flex',
               alignItems: 'center',
               gap: 7,
+              transition: 'all 0.2s',
             }}
           >
-            🔗 Copy Link
+            🔗 {copied ? (t(T.thankyou.copied) as string) : (t(T.thankyou.copy) as string)}
           </button>
         </div>
 
@@ -173,9 +178,9 @@ export default function ThankYou({ data, onReset }: Props) {
           <button
             onClick={() => document.getElementById('global-map')?.scrollIntoView({ behavior: 'smooth' })}
             style={{
-              background: 'rgba(232,25,44,0.12)',
-              border: '1px solid rgba(232,25,44,0.3)',
-              color: '#ff8899',
+              background: 'rgba(204,16,32,0.08)',
+              border: '1px solid rgba(204,16,32,0.2)',
+              color: '#CC1020',
               borderRadius: 12,
               padding: '11px 22px',
               fontWeight: 600,
@@ -188,9 +193,9 @@ export default function ThankYou({ data, onReset }: Props) {
           <button
             onClick={onReset}
             style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              color: 'rgba(245,240,232,0.5)',
+              background: 'rgba(74,26,26,0.04)',
+              border: '1px solid rgba(74,26,26,0.12)',
+              color: 'rgba(74,26,26,0.5)',
               borderRadius: 12,
               padding: '11px 22px',
               fontWeight: 600,
@@ -198,12 +203,12 @@ export default function ThankYou({ data, onReset }: Props) {
               cursor: 'pointer',
             }}
           >
-            + Submit Another
+            + {t(T.thankyou.another) as string}
           </button>
         </div>
 
         {/* Auto scroll note */}
-        <p style={{ color: 'rgba(245,240,232,0.2)', fontSize: '0.74rem', marginTop: '1.5rem' }}>
+        <p style={{ color: 'rgba(74,26,26,0.25)', fontSize: '0.74rem', marginTop: '1.5rem' }}>
           You&apos;ll be taken to the map in a moment…
         </p>
       </motion.div>

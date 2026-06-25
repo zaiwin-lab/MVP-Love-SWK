@@ -1,9 +1,13 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useLang } from '@/contexts/LanguageContext'
+import { T } from '@/lib/translations'
+import LanguageSwitcher from './LanguageSwitcher'
 
 export default function StickyNav() {
   const [visible, setVisible] = useState(false)
+  const { t } = useLang()
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > window.innerHeight * 0.6)
@@ -29,19 +33,21 @@ export default function StickyNav() {
                 fontSize: '1rem',
                 fontWeight: 700,
                 fontStyle: 'italic',
-                color: '#F5F0E8',
+                color: '#CC1020',
               }}
             >
-              Kamek Sayang Sarawak
+              {t(T.nav.brand) as string}
             </span>
           </div>
+
+          <LanguageSwitcher />
 
           <button
             className="btn-primary"
             onClick={() => document.getElementById('submission-form')?.scrollIntoView({ behavior: 'smooth' })}
             style={{ padding: '9px 22px', fontSize: '0.85rem' }}
           >
-            Leave a Message ❤️
+            {t(T.nav.cta) as string}
           </button>
         </motion.nav>
       )}

@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import { MOCK_MESSAGES } from '@/lib/mockData'
+import { useLang } from '@/contexts/LanguageContext'
+import { T } from '@/lib/translations'
 
 const Globe = dynamic(() => import('react-globe.gl'), { ssr: false })
 
@@ -11,6 +13,7 @@ const SARAWAK = { lat: 1.5533, lng: 110.3592 }
 export default function GlobalMap() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [renderDims, setRenderDims] = useState({ w: 800, h: 560 })
+  const { t } = useLang()
 
   useEffect(() => {
     const update = () => {
@@ -33,12 +36,12 @@ export default function GlobalMap() {
   }))
 
   return (
-    <section id="global-map" className="section-pad" style={{ background: '#090912', position: 'relative', overflow: 'hidden' }}>
+    <section id="global-map" className="section-pad" style={{ background: '#1A0408', position: 'relative', overflow: 'hidden' }}>
       <div style={{
         position: 'absolute', top: '50%', left: '50%',
         transform: 'translate(-50%,-50%)',
         width: 700, height: 700, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(232,25,44,0.07) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(232,25,44,0.09) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
 
@@ -50,8 +53,8 @@ export default function GlobalMap() {
           transition={{ duration: 0.8 }}
           style={{ textAlign: 'center', marginBottom: '3rem' }}
         >
-          <h2 className="section-title">Hearts Around the World</h2>
-          <p className="section-sub">Every ❤️ is a love note arcing back to Sarawak</p>
+          <h2 className="section-title">{t(T.map.title) as string}</h2>
+          <p className="section-sub">{t(T.map.sub) as string}</p>
           <div className="divider" />
         </motion.div>
 
@@ -121,7 +124,7 @@ export default function GlobalMap() {
           transition={{ delay: 0.5 }}
           style={{ textAlign: 'center', color: 'rgba(245,240,232,0.2)', fontSize: '0.78rem', marginTop: '1rem' }}
         >
-          {MOCK_MESSAGES.length} love messages · Drag to explore
+          {MOCK_MESSAGES.length} {t(T.map.hint) as string}
         </motion.p>
       </div>
     </section>
