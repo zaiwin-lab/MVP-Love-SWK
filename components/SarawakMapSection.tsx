@@ -12,68 +12,80 @@ const LANG_T = {
 }
 
 // 12 Sarawak divisions — polygon points in SVG viewBox 0 0 720 490
-// NW coast faces upper-left; S/Indonesia border faces lower-right
+// NW coast faces upper-left (small y); S/Indonesia border faces lower-right (large y)
+// Coordinates revised to match reference division map accurately
 const DIVISIONS = [
   {
     id: 'kuching',   name: 'Kuching',
-    points: '20,445 44,406 67,378 90,356 120,332 136,370 116,415 80,437',
-    cx: 83,  cy: 390, initHearts: 89,
+    // SW coastal boot shape
+    points: '57,355 75,358 92,348 108,340 120,328 130,294 130,258 119,252 106,261 91,273 76,288 64,304 57,322',
+    cx: 90,  cy: 305, initHearts: 89,
   },
   {
     id: 'samarahan', name: 'Samarahan',
-    points: '90,356 120,332 158,310 168,342 150,374 136,370',
-    cx: 135, cy: 348, initHearts: 42,
+    // Small coastal division NE of Kuching
+    points: '119,252 148,235 148,292 135,306 130,294 130,258',
+    cx: 135, cy: 268, initHearts: 42,
   },
   {
     id: 'serian',    name: 'Serian',
-    points: '80,437 116,415 136,370 150,374 168,342 188,396 162,446 118,463 72,463 28,452',
-    cx: 120, cy: 420, initHearts: 28,
+    // Larger inland division S of Kuching + Samarahan, borders Indonesia (SW)
+    points: '57,355 75,358 92,348 108,340 120,328 130,294 135,306 148,292 152,318 145,362 128,390 98,398 72,390 57,368',
+    cx: 105, cy: 358, initHearts: 28,
   },
   {
     id: 'sri_aman',  name: 'Sri Aman',
-    points: '158,310 200,286 222,308 206,345 186,362 168,342',
-    cx: 190, cy: 326, initHearts: 18,
+    // Coastal, between Samarahan and Betong
+    points: '148,235 183,218 198,244 198,290 182,312 165,332 152,318 148,292',
+    cx: 172, cy: 278, initHearts: 18,
   },
   {
     id: 'betong',    name: 'Betong',
-    points: '200,286 244,266 260,290 243,315 222,308',
-    cx: 234, cy: 293, initHearts: 12,
+    // Small coastal division NE of Sri Aman
+    points: '183,218 214,202 225,224 222,262 205,278 198,244',
+    cx: 208, cy: 238, initHearts: 12,
   },
   {
     id: 'sarikei',   name: 'Sarikei',
-    points: '244,266 290,248 308,272 288,296 260,290',
-    cx: 278, cy: 274, initHearts: 22,
+    // Small coastal between Betong and Mukah/Sibu
+    points: '214,202 248,190 258,218 248,248 225,248 222,262 225,224',
+    cx: 235, cy: 224, initHearts: 22,
   },
   {
     id: 'sibu',      name: 'Sibu',
-    points: '290,248 334,230 378,213 402,240 380,266 340,280 308,272',
-    cx: 347, cy: 250, initHearts: 52,
+    // Medium inland division
+    points: '248,190 280,176 300,205 292,260 272,282 248,282 248,248 258,218',
+    cx: 270, cy: 235, initHearts: 52,
   },
   {
     id: 'mukah',     name: 'Mukah',
-    points: '378,213 422,195 468,176 490,202 462,228 426,242 402,240',
-    cx: 434, cy: 214, initHearts: 15,
+    // Coastal division above Sibu and Sarikei
+    points: '248,186 280,172 302,162 322,158 340,148 356,175 332,198 305,215 280,225 258,218 248,190',
+    cx: 300, cy: 185, initHearts: 15,
   },
   {
     id: 'bintulu',   name: 'Bintulu',
-    points: '468,176 505,158 542,138 560,162 540,198 502,212 490,202',
-    cx: 516, cy: 177, initHearts: 31,
+    // Large coastal division NE of Mukah
+    points: '322,158 340,148 365,135 392,122 415,110 435,120 418,162 398,185 375,200 355,210 332,220 330,198 356,175',
+    cx: 378, cy: 165, initHearts: 31,
   },
   {
-    // Kapit = large interior — fills all space inland of coastal divisions
+    // Kapit = HUGE interior — fills all space inland of coastal divisions + Indonesia border sweep
     id: 'kapit',     name: 'Kapit',
-    points: '28,452 72,463 118,463 162,446 188,396 168,342 186,362 206,345 222,308 243,315 260,290 288,296 308,272 340,280 380,266 402,240 426,242 462,228 490,202 502,212 540,198 558,246 545,326 560,346 585,372 550,416 508,448 462,464 408,470 352,468 292,460 228,450 165,440 108,432 62,442',
-    cx: 360, cy: 380, initHearts: 35,
+    points: '152,318 182,312 198,290 205,278 222,262 248,282 272,282 292,260 318,255 355,235 398,215 435,200 438,168 435,238 415,262 392,315 368,372 338,415 302,445 262,462 222,462 182,458 148,452 118,448 98,444 78,434 57,415 57,368 72,390 98,398 128,390 145,362',
+    cx: 310, cy: 375, initHearts: 35,
   },
   {
     id: 'miri',      name: 'Miri',
-    points: '542,138 575,116 610,94 628,78 635,65 628,54 632,44 642,36 645,78 628,148 610,220 585,292 560,346 545,326 558,246 540,198 560,162',
-    cx: 583, cy: 196, initHearts: 47,
+    // Large NE coastal division + inland area
+    points: '415,110 458,98 472,95 486,82 490,74 496,68 508,58 518,58 518,112 508,148 488,182 465,210 440,230 418,238 398,215 435,200 438,168 435,120',
+    cx: 470, cy: 152, initHearts: 47,
   },
   {
     id: 'limbang',   name: 'Limbang',
-    points: '642,36 650,30 660,22 670,16 688,32 672,98 656,168 645,78',
-    cx: 659, cy: 66,  initHearts: 15,
+    // Far NE corner (includes Lawas), separated from Miri by Brunei
+    points: '508,58 522,52 536,48 548,45 560,50 572,56 580,70 585,88 588,108 580,135 565,158 548,168 528,158 518,112 508,58',
+    cx: 552, cy: 100, initHearts: 15,
   },
 ]
 
@@ -197,15 +209,16 @@ export default function SarawakMapSection() {
 
             {/* Sea background */}
             <rect width="720" height="490" fill="url(#seaGrad)" rx="14"/>
-            <text x="140" y="185" fontSize="9" fill="rgba(70,120,170,0.42)" fontStyle="italic" fontFamily="Georgia,serif" textAnchor="middle">South China Sea</text>
-            <text x="420" y="44" fontSize="8" fill="rgba(70,120,170,0.32)" fontStyle="italic" fontFamily="Georgia,serif" textAnchor="middle">South China Sea</text>
+            <text x="80" y="210" fontSize="9" fill="rgba(70,120,170,0.42)" fontStyle="italic" fontFamily="Georgia,serif" textAnchor="middle">South China Sea</text>
+            <text x="380" y="90" fontSize="8" fill="rgba(70,120,170,0.32)" fontStyle="italic" fontFamily="Georgia,serif" textAnchor="middle">South China Sea</text>
 
             {/* Divisions */}
             {DIVISIONS.map(div => {
               const count = hearts[div.id] ?? 0
               const isH   = hovered === div.id
               const isN   = newHeart === div.id
-              const dots  = scatter(div.cx, div.cy, count)
+              const spread = div.id === 'kapit' ? 60 : div.id === 'limbang' ? 18 : 30
+              const dots  = scatter(div.cx, div.cy, count, spread)
               const major = ['kuching', 'sibu', 'miri', 'kapit'].includes(div.id)
 
               return (
@@ -248,9 +261,9 @@ export default function SarawakMapSection() {
               )
             })}
 
-            {/* Brunei */}
-            <circle cx="636" cy="58" r="4.5" fill="rgba(200,134,10,0.22)" stroke="#C8860A" strokeWidth="0.8"/>
-            <text x="622" y="48" fontSize="6.5" fill="rgba(139,94,60,0.65)" textAnchor="middle" fontStyle="italic" fontFamily="Inter,sans-serif">Brunei</text>
+            {/* Brunei — sits between Miri and Limbang on the NE coast */}
+            <circle cx="513" cy="68" r="4.5" fill="rgba(200,134,10,0.22)" stroke="#C8860A" strokeWidth="0.8"/>
+            <text x="513" y="58" fontSize="6.5" fill="rgba(139,94,60,0.65)" textAnchor="middle" fontStyle="italic" fontFamily="Inter,sans-serif">Brunei</text>
 
             {/* Hornbill watermark */}
             <g transform="translate(650,355) scale(0.5)" opacity="0.09">
