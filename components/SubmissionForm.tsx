@@ -48,10 +48,18 @@ export default function SubmissionForm({ onSuccess }: Props) {
       return
     }
     setLoading(true)
-    // Simulate a network request (frontend-only demo)
-    await new Promise(r => setTimeout(r, 1200))
+    const res = await fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form),
+    })
+    const data = await res.json()
     setLoading(false)
-    onSuccess({ ...form, id: 'demo-' + Date.now() })
+    if (!res.ok) {
+      setError(data.error || 'Something went wrong. Please try again.')
+      return
+    }
+    onSuccess({ ...form, id: data.id })
     // Plant a heart on the Sarawak division map
     if (form.district) {
       window.dispatchEvent(new CustomEvent('sarawak-heart-added', { detail: { divisionId: form.district } }))
