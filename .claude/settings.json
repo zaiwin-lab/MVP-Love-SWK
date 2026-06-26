@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Netlify__netlify-deploy-services-updater"
+    ]
+  }
+}
