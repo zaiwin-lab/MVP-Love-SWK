@@ -163,6 +163,9 @@ export default function CommunityPromise() {
             <span>{t(T.promise.copyright) as string}</span>
             <span>{t(T.promise.oneworld) as string}</span>
           </div>
+          <div style={{ marginTop: '1.25rem', fontSize: '0.72rem', color: 'rgba(154,90,90,0.65)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+            Innovated by <strong style={{ color: '#CC1020', fontWeight: 700 }}>Azam</strong> &amp; <strong style={{ color: '#CC1020', fontWeight: 700 }}>KOBIS AI Prodigy Team</strong>
+          </div>
         </motion.div>
       </div>
     </section>
