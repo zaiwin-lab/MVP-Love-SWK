@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { COUNTRIES } from '@/lib/countries'
 import { useLang } from '@/contexts/LanguageContext'
 import { T } from '@/lib/translations'
+import { SARAWAK_DIVISION_OPTIONS } from './SarawakMapSection'
 
 interface Props {
   onSuccess: (data: Record<string, unknown>) => void
@@ -51,6 +52,10 @@ export default function SubmissionForm({ onSuccess }: Props) {
     await new Promise(r => setTimeout(r, 1200))
     setLoading(false)
     onSuccess({ ...form, id: 'demo-' + Date.now() })
+    // Plant a heart on the Sarawak division map
+    if (form.district) {
+      window.dispatchEvent(new CustomEvent('sarawak-heart-added', { detail: { divisionId: form.district } }))
+    }
   }
 
   return (
@@ -103,14 +108,13 @@ export default function SubmissionForm({ onSuccess }: Props) {
                 />
               </div>
               <div>
-                <label style={LABEL}>{t(T.form.district) as string} {OPT}</label>
-                <input
-                  name="district"
-                  value={form.district}
-                  onChange={set}
-                  placeholder={t(T.form.placeholder_district) as string}
-                  className="input-field-light"
-                />
+                <label style={LABEL}>Your Division in Sarawak {OPT}</label>
+                <select name="district" value={form.district} onChange={set} className="input-field-light">
+                  <option value="">— Not from Sarawak —</option>
+                  {SARAWAK_DIVISION_OPTIONS.map(d => (
+                    <option key={d.id} value={d.id}>{d.name} Division</option>
+                  ))}
+                </select>
               </div>
             </div>
 
