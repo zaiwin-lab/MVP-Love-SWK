@@ -1,6 +1,7 @@
 import StickyNav from '@/components/StickyNav'
 import Hero from '@/components/Hero'
 import LiveCounter from '@/components/LiveCounter'
+import SarawakMapSection from '@/components/SarawakMapSection'
 import GlobalMap from '@/components/GlobalMap'
 import SubmissionFormSection from '@/components/SubmissionFormSection'
 import MessageWall from '@/components/MessageWall'
@@ -14,6 +15,7 @@ export default function Home() {
       <main>
         <Hero />
         <LiveCounter />
+        <SarawakMapSection />
         <GlobalMap />
         <SubmissionFormSection />
         <MessageWall />

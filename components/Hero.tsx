@@ -71,8 +71,33 @@ export default function Hero() {
         background: 'radial-gradient(ellipse at 50% 30%, #3D0010 0%, #1a0205 60%, #08010a 100%)',
       }}
     >
+      {/* Sarawak flag pua kumbu stripe */}
+      <div className="pua-kumbu-bar" style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 5, opacity: 0.7 }} />
+
       {/* Star field */}
       <div ref={starsRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+
+      {/* Hornbill silhouette */}
+      <svg
+        viewBox="0 0 200 140"
+        style={{
+          position: 'absolute', right: '5%', top: '15%',
+          width: 'clamp(100px, 14vw, 180px)',
+          opacity: 0.07,
+          pointerEvents: 'none',
+          zIndex: 2,
+        }}
+      >
+        <ellipse cx="80" cy="90" rx="65" ry="38" fill="#FFD700"/>
+        <circle cx="145" cy="52" r="28" fill="#FFD700"/>
+        <path d="M 138,28 Q 178,12 195,22 Q 188,38 152,36 Z" fill="#CC1020"/>
+        <path d="M 152,52 Q 200,46 205,56 Q 200,66 152,62 Z" fill="#CC1020"/>
+        <path d="M 22,82 Q -28,105 -18,122 Q 0,112 18,94 Z" fill="#FFD700"/>
+        <path d="M 16,96 Q -34,124 -22,145 Q -4,130 14,110 Z" fill="#FFD700"/>
+        <path d="M 55,58 Q 80,34 118,46 Q 108,82 62,88 Z" fill="#C8860A"/>
+        <circle cx="152" cy="46" r="6" fill="#1A0408"/>
+        <circle cx="150" cy="44" r="2" fill="#FFD700"/>
+      </svg>
 
       {/* Globe background — centered, large, fills hero */}
       {globeReady && (
@@ -167,6 +192,7 @@ export default function Hero() {
         >
           <span style={{ animation: 'heartPulse 2s infinite', display: 'inline-block' }}>❤️</span>
           {t(T.hero.eyebrow) as string}
+          <span style={{ opacity: 0.6, marginLeft: 4 }}>· Bumi Kenyalang</span>
         </motion.div>
 
         {/* Main title — word by word stagger */}

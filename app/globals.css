@@ -15,6 +15,11 @@
   --sarawak-dark: #080810;
   --background: #FFFBF5;
   --foreground: #1A0408;
+  /* Sarawak extended palette */
+  --sarawak-jungle: #1B4E30;
+  --sarawak-forest: #2D6A35;
+  --sarawak-gold-light: #FFE066;
+  --sarawak-earth: #8B5E3C;
 }
 
 * {
@@ -109,6 +114,11 @@ body {
   10%  { opacity: 1; }
   90%  { opacity: 1; }
   100% { transform: translateY(120vh) rotate(var(--rot, 0deg)); opacity: 0; }
+}
+
+@keyframes puaPulse {
+  0%, 100% { r: 5; opacity: 0.9; }
+  50% { r: 8; opacity: 0.6; }
 }
 
 /* ---- Utility Classes ---- */
@@ -387,10 +397,24 @@ body {
   transition: width 1.2s ease;
 }
 
-/* Subtle dot pattern for texture on light sections */
+/* Pua kumbu diamond pattern for light sections */
 .bg-pattern {
-  background-image: radial-gradient(circle, rgba(204, 16, 32, 0.04) 1px, transparent 1px);
-  background-size: 28px 28px;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(204,16,32,0.045) 0px, rgba(204,16,32,0.045) 1.5px, transparent 1.5px, transparent 16px),
+    repeating-linear-gradient(-45deg, rgba(204,16,32,0.045) 0px, rgba(204,16,32,0.045) 1.5px, transparent 1.5px, transparent 16px);
+}
+
+/* Sarawak flag / pua kumbu horizontal stripe */
+.pua-kumbu-bar {
+  height: 8px;
+  background: repeating-linear-gradient(
+    90deg,
+    #CC1020 0px, #CC1020 8px,
+    #FFD700 8px, #FFD700 16px,
+    #1A0408 16px, #1A0408 24px,
+    #FFD700 24px, #FFD700 32px
+  );
+  width: 100%;
 }
 
 /* Responsive grid */
