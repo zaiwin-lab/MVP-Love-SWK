@@ -1,18 +1,48 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MOCK_MESSAGES } from '@/lib/mockData'
 import { useLang } from '@/contexts/LanguageContext'
 import { T } from '@/lib/translations'
 
 const INITIAL = 6
+const PAGE = 6
+
+type Msg = { id: string; name: string | null; city: string; country: string; one_word: string | null; message: string }
 
 export default function MessageWall() {
+  const [messages, setMessages] = useState<Msg[]>(MOCK_MESSAGES as Msg[])
   const [visible, setVisible] = useState(INITIAL)
+  const [total, setTotal] = useState(MOCK_MESSAGES.length)
+  const [loading, setLoading] = useState(false)
   const { t } = useLang()
 
-  const shown = MOCK_MESSAGES.slice(0, visible)
-  const hasMore = visible < MOCK_MESSAGES.length
+  useEffect(() => {
+    fetch(`/api/messages?limit=${INITIAL}&offset=0`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.messages?.length > 0) {
+          setMessages(data.messages)
+          setTotal(data.total)
+          setVisible(data.messages.length)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const loadMore = async () => {
+    setLoading(true)
+    const res = await fetch(`/api/messages?limit=${PAGE}&offset=${visible}`)
+    const data = await res.json()
+    if (data.messages?.length > 0) {
+      setMessages(prev => [...prev, ...data.messages])
+      setVisible(v => v + data.messages.length)
+    }
+    setLoading(false)
+  }
+
+  const shown = messages.slice(0, visible)
+  const hasMore = visible < total
 
   return (
     <section className="section-pad" style={{ background: '#FFFBF5', position: 'relative', overflow: 'hidden' }}>
@@ -112,7 +142,8 @@ export default function MessageWall() {
             viewport={{ once: true }}
           >
             <button
-              onClick={() => setVisible(v => v + 3)}
+              onClick={loadMore}
+              disabled={loading}
               style={{
                 padding: '14px 44px',
                 fontSize: '1rem',
@@ -121,20 +152,23 @@ export default function MessageWall() {
                 background: 'transparent',
                 color: '#CC1020',
                 fontWeight: 700,
-                cursor: 'pointer',
+                cursor: loading ? 'wait' : 'pointer',
                 transition: 'all 0.2s',
                 letterSpacing: '0.04em',
+                opacity: loading ? 0.6 : 1,
               }}
               onMouseOver={e => {
-                (e.target as HTMLButtonElement).style.background = '#CC1020'
-                ;(e.target as HTMLButtonElement).style.color = '#fff'
+                if (!loading) {
+                  (e.target as HTMLButtonElement).style.background = '#CC1020'
+                  ;(e.target as HTMLButtonElement).style.color = '#fff'
+                }
               }}
               onMouseOut={e => {
                 (e.target as HTMLButtonElement).style.background = 'transparent'
                 ;(e.target as HTMLButtonElement).style.color = '#CC1020'
               }}
             >
-              {t(T.wall.loadMore) as string} ❤️
+              {loading ? 'Loading…' : `${t(T.wall.loadMore) as string} ❤️`}
             </button>
           </motion.div>
         )}

@@ -10,9 +10,14 @@ const Globe = dynamic(() => import('react-globe.gl'), { ssr: false })
 
 const SARAWAK = { lat: 1.5533, lng: 110.3592 }
 
+type MsgPoint = { id: string; city: string; country: string; latitude: number; longitude: number }
+
 export default function GlobalMap() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [renderDims, setRenderDims] = useState({ w: 800, h: 560 })
+  const [points, setPoints] = useState<MsgPoint[]>(
+    MOCK_MESSAGES.map(m => ({ id: m.id, city: m.city, country: m.country, latitude: m.latitude, longitude: m.longitude }))
+  )
   const { t } = useLang()
 
   useEffect(() => {
@@ -27,7 +32,21 @@ export default function GlobalMap() {
     return () => window.removeEventListener('resize', update)
   }, [])
 
-  const arcsData = MOCK_MESSAGES.map(m => ({
+  useEffect(() => {
+    fetch('/api/messages?limit=100')
+      .then(r => r.json())
+      .then(data => {
+        if (data.messages?.length > 0) {
+          setPoints(data.messages
+            .filter((m: MsgPoint) => m.latitude && m.longitude)
+            .map((m: MsgPoint) => ({ id: m.id, city: m.city, country: m.country, latitude: m.latitude, longitude: m.longitude }))
+          )
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const arcsData = points.map(m => ({
     startLat: m.latitude,
     startLng: m.longitude,
     endLat: SARAWAK.lat,
@@ -80,11 +99,11 @@ export default function GlobalMap() {
             arcDashGap={0.18}
             arcDashAnimateTime={2200}
             arcStroke={0.6}
-            htmlElementsData={MOCK_MESSAGES}
-            htmlLat={(d: object) => (d as typeof MOCK_MESSAGES[0]).latitude}
-            htmlLng={(d: object) => (d as typeof MOCK_MESSAGES[0]).longitude}
+            htmlElementsData={points}
+            htmlLat={(d: object) => (d as MsgPoint).latitude}
+            htmlLng={(d: object) => (d as MsgPoint).longitude}
             htmlElement={(d: object) => {
-              const m = d as typeof MOCK_MESSAGES[0]
+              const m = d as MsgPoint
               const wrap = document.createElement('div')
               wrap.style.cssText = 'display:flex; flex-direction:column; align-items:center; pointer-events:none; gap:3px;'
 
@@ -124,7 +143,7 @@ export default function GlobalMap() {
           transition={{ delay: 0.5 }}
           style={{ textAlign: 'center', color: 'rgba(245,240,232,0.2)', fontSize: '0.78rem', marginTop: '1rem' }}
         >
-          {MOCK_MESSAGES.length} {t(T.map.hint) as string}
+          {points.length} {t(T.map.hint) as string}
         </motion.p>
       </div>
     </section>

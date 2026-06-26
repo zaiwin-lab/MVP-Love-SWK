@@ -1,24 +1,47 @@
 'use client'
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import CountUp from 'react-countup'
 import { MOCK_STATS } from '@/lib/mockData'
 import { useLang } from '@/contexts/LanguageContext'
 import { T } from '@/lib/translations'
 
-const MILESTONE = MOCK_STATS.milestone
+const MILESTONE = 1000
 
 export default function LiveCounter() {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
-  const pct = Math.min((MOCK_STATS.total / MILESTONE) * 100, 100)
   const { t } = useLang()
+  const [stats, setStats] = useState({
+    total: MOCK_STATS.total,
+    countries: MOCK_STATS.countries,
+    cities: MOCK_STATS.cities,
+    participants: MOCK_STATS.participants,
+  })
+
+  useEffect(() => {
+    fetch('/api/messages?limit=1')
+      .then(r => r.json())
+      .then(data => {
+        if (data.total > 0) {
+          setStats({
+            total: data.total,
+            countries: data.countriesCount,
+            cities: data.citiesCount,
+            participants: data.total,
+          })
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const pct = Math.min((stats.total / MILESTONE) * 100, 100)
 
   const STATS = [
-    { labelKey: T.counter.messages, value: MOCK_STATS.total, icon: '💌' },
-    { labelKey: T.counter.countries, value: MOCK_STATS.countries, icon: '🌍' },
-    { labelKey: T.counter.cities, value: MOCK_STATS.cities, icon: '🏙️' },
-    { labelKey: T.counter.hearts, value: MOCK_STATS.participants, icon: '❤️' },
+    { labelKey: T.counter.messages, value: stats.total, icon: '💌' },
+    { labelKey: T.counter.countries, value: stats.countries, icon: '🌍' },
+    { labelKey: T.counter.cities, value: stats.cities, icon: '🏙️' },
+    { labelKey: T.counter.hearts, value: stats.participants, icon: '❤️' },
   ]
 
   return (
