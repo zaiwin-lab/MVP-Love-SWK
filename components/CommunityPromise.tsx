@@ -13,177 +13,161 @@ export default function CommunityPromise() {
 
   return (
     <section
-      className="section-pad bg-pattern"
-      style={{
-        background: '#FFFBF5',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      className="section-pad"
+      style={{ background: 'var(--green-dark)', position: 'relative', overflow: 'hidden' }}
     >
-      <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-        {/* Animated hearts row */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
-          {[0.0, 0.2, 0.4, 0.6, 0.8].map((delay, i) => (
-            <motion.span
-              key={i}
-              style={{ fontSize: '1.4rem' }}
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 2.2, delay, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              ❤️
-            </motion.span>
-          ))}
-        </div>
+      {/* Subtle texture — thin pua stripe at top only */}
+      <div className="pua-stripe" style={{ position: 'absolute', top: 0, left: 0, right: 0 }} />
 
+      <div className="container" style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
+
+        {/* Hornbill mark */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.9 }}
-          style={{
-            border: '1px solid rgba(204,16,32,0.18)',
-            borderRadius: 28,
-            padding: 'clamp(2.5rem, 6vw, 5rem)',
-            background: 'rgba(255,255,255,0.9)',
-            boxShadow: '0 8px 60px rgba(204,16,32,0.10), 0 2px 8px rgba(0,0,0,0.04)',
-          }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          style={{ marginBottom: '2.5rem' }}
         >
-          {/* Quote mark decoration */}
-          <div style={{
-            fontFamily: 'Georgia, serif',
-            fontSize: '6rem',
-            lineHeight: 0.6,
-            color: 'rgba(204,16,32,0.10)',
-            marginBottom: '1rem',
-            fontWeight: 900,
-            userSelect: 'none',
-          }}>
-            &ldquo;
-          </div>
-
-          <h2
-            className="font-playfair"
-            style={{
-              fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)',
-              fontWeight: 800,
-              fontStyle: 'italic',
-              color: '#1A0408',
-              marginBottom: '1.5rem',
-              lineHeight: 1.2,
-            }}
-          >
-            {t(T.promise.title) as string}
-          </h2>
-
-          <div style={{ width: 64, height: 3, background: 'linear-gradient(90deg, #CC1020, #FFD700)', margin: '0 auto 2rem', borderRadius: 2 }} />
-
-          <p style={{
-            fontSize: 'clamp(1rem, 2vw, 1.18rem)',
-            color: '#4A1A1A',
-            lineHeight: 1.95,
-            marginBottom: '2.5rem',
-            maxWidth: 580,
-            margin: '0 auto 2.5rem',
-          }}>
-            {(t(T.promise.body) as string)
-              .replace('{n}', `${MILESTONE.toLocaleString()} messages`)
-              .split('Community Wall of Love for Sarawak')
-              .map((part, idx, arr) =>
-                idx < arr.length - 1 ? (
-                  <span key={idx}>
-                    {part.split(`${MILESTONE.toLocaleString()} messages`).map((p2, j2, a2) =>
-                      j2 < a2.length - 1 ? (
-                        <span key={j2}>
-                          {p2}<strong style={{ color: '#C8860A' }}>{MILESTONE.toLocaleString()} messages</strong>
-                        </span>
-                      ) : p2
-                    )}
-                    <strong style={{ color: '#CC1020' }}>Community Wall of Love for Sarawak</strong>
-                  </span>
-                ) : (
-                  part.split(`${MILESTONE.toLocaleString()} messages`).map((p2, j2, a2) =>
-                    j2 < a2.length - 1 ? (
-                      <span key={j2}>
-                        {p2}<strong style={{ color: '#C8860A' }}>{MILESTONE.toLocaleString()} messages</strong>
-                      </span>
-                    ) : p2
-                  )
-                )
-              )
-            }
-          </p>
-
-          {/* Progress */}
-          <div style={{ marginBottom: '2.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
-              <span style={{ color: '#9A5A5A', fontSize: '0.82rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                {t(T.promise.progress) as string}
-              </span>
-              <span style={{ color: '#CC1020', fontWeight: 800, fontSize: '0.95rem' }}>
-                {COUNT} / {MILESTONE.toLocaleString()}
-              </span>
-            </div>
-            <div style={{ background: 'rgba(204,16,32,0.08)', borderRadius: 99, height: 14, overflow: 'hidden', position: 'relative' }}>
-              <motion.div
-                initial={{ width: 0 }}
-                whileInView={{ width: `${PCT}%` }}
-                viewport={{ once: true }}
-                transition={{ duration: 2, delay: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
-                style={{
-                  position: 'absolute', left: 0, top: 0, bottom: 0,
-                  background: 'linear-gradient(90deg, #CC1020 0%, #E8192C 50%, #FFD700 100%)',
-                  borderRadius: 99,
-                }}
-              />
-              <div className="progress-shimmer" style={{ position: 'absolute', inset: 0 }} />
-            </div>
-          </div>
-
-          <motion.button
-            className="btn-primary"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => document.getElementById('submission-form')?.scrollIntoView({ behavior: 'smooth' })}
-            style={{ padding: '17px 50px', fontSize: '1.08rem', border: 'none', cursor: 'pointer', letterSpacing: '0.04em' }}
-          >
-            {t(T.promise.addVoice) as string}
-          </motion.button>
+          <svg viewBox="0 0 60 42" width="60" height="42" style={{ opacity: 0.6 }}>
+            <ellipse cx="24" cy="28" rx="20" ry="11" fill="#C8860A"/>
+            <circle cx="44" cy="16" r="8" fill="#C8860A"/>
+            <path d="M 42,8 Q 58,3 60,7 Q 57,12 46,11 Z" fill="#CC1020"/>
+            <path d="M 46,16 Q 62,14 62,18 Q 60,22 46,20 Z" fill="#CC1020"/>
+            <circle cx="46" cy="14" r="2" fill="#0F2E1C"/>
+          </svg>
         </motion.div>
 
-        {/* Footer */}
+        <motion.h2
+          className="section-title section-title--light"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.8 }}
+          style={{ maxWidth: 680, margin: '0 auto 1.25rem' }}
+        >
+          {t(T.promise.title) as string}
+        </motion.h2>
+
         <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          style={{
+            width: 48, height: 2,
+            background: 'var(--gold)',
+            borderRadius: 2,
+            margin: '1.25rem auto 2.25rem',
+          }}
+        />
+
+        <motion.p
+          className="section-sub section-sub--light"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.6 }}
-          style={{ marginTop: '3rem', color: '#9A5A5A', fontSize: '0.82rem', letterSpacing: '0.08em' }}
+          transition={{ duration: 0.8, delay: 0.15 }}
+          style={{ maxWidth: 560, margin: '0 auto 3rem' }}
         >
-          {t(T.promise.footer) as string}
-          <div style={{ marginTop: '1.5rem', display: 'flex', gap: '2rem', justifyContent: 'center', fontSize: '0.75rem', color: '#9A5A5A' }}>
+          {(t(T.promise.body) as string)
+            .replace('{n}', `${MILESTONE.toLocaleString()} messages`)
+            .replace('Community Wall of Love for Sarawak', 'Community Wall of Love for Sarawak')
+          }
+        </motion.p>
+
+        {/* Progress */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          style={{
+            maxWidth: 520,
+            margin: '0 auto 3rem',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(200,134,10,0.2)',
+            borderRadius: 'var(--r-lg)',
+            padding: '1.5rem 2rem',
+          }}
+        >
+          <div style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            marginBottom: '0.875rem',
+            fontFamily: 'var(--font-body, sans-serif)',
+          }}>
+            <span style={{ color: 'rgba(238,245,240,0.55)', fontSize: '0.82rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              {t(T.promise.progress) as string}
+            </span>
+            <span style={{ color: 'var(--gold)', fontWeight: 700, fontSize: '0.95rem' }}>
+              {COUNT.toLocaleString()} / {MILESTONE.toLocaleString()}
+            </span>
+          </div>
+          <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 99, height: 8, overflow: 'hidden' }}>
+            <motion.div
+              initial={{ width: 0 }}
+              whileInView={{ width: `${PCT}%` }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.6, delay: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
+              style={{
+                height: '100%',
+                background: 'linear-gradient(90deg, var(--green-mid) 0%, var(--gold) 100%)',
+                borderRadius: 99,
+              }}
+            />
+          </div>
+        </motion.div>
+
+        <motion.button
+          className="btn-primary"
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => document.getElementById('submission-form')?.scrollIntoView({ behavior: 'smooth' })}
+          style={{ fontSize: '1rem', padding: '16px 44px', marginBottom: '4rem' }}
+        >
+          {t(T.promise.addVoice) as string}
+        </motion.button>
+
+        {/* Footer */}
+        <div style={{
+          borderTop: '1px solid rgba(238,245,240,0.10)',
+          paddingTop: '2.5rem',
+          color: 'rgba(238,245,240,0.35)',
+          fontSize: '0.78rem',
+          fontFamily: 'var(--font-body, sans-serif)',
+          letterSpacing: '0.06em',
+        }}>
+          <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '1rem' }}>
             <span>{t(T.promise.copyright) as string}</span>
             <span>{t(T.promise.oneworld) as string}</span>
           </div>
-          <div style={{ marginTop: '1.25rem', fontSize: '0.72rem', color: 'rgba(154,90,90,0.65)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            Innovated by <strong style={{ color: '#CC1020', fontWeight: 700 }}>Azam</strong> &amp; <strong style={{ color: '#CC1020', fontWeight: 700 }}>KOBIS AI Prodigy Team</strong>
+          <div style={{ marginBottom: '0.75rem', color: 'rgba(238,245,240,0.28)' }}>
+            {t(T.promise.footer) as string}
           </div>
-          <div style={{ marginTop: '1rem' }}>
+          <div style={{ color: 'rgba(238,245,240,0.22)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+            Innovated by{' '}
+            <strong style={{ color: 'var(--gold)', fontWeight: 600 }}>Azam</strong>
+            {' '}&amp;{' '}
+            <strong style={{ color: 'var(--gold)', fontWeight: 600 }}>KOBIS AI Prodigy Team</strong>
+          </div>
+          <div style={{ marginTop: '1.25rem' }}>
             <a
               href="/admin"
               style={{
                 fontSize: '0.68rem',
-                color: 'rgba(154,90,90,0.4)',
+                color: 'rgba(238,245,240,0.2)',
                 textDecoration: 'none',
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 transition: 'color 0.2s',
               }}
-              onMouseOver={e => (e.currentTarget.style.color = '#CC1020')}
-              onMouseOut={e => (e.currentTarget.style.color = 'rgba(154,90,90,0.4)')}
+              onMouseOver={e => (e.currentTarget.style.color = 'var(--gold)')}
+              onMouseOut={e => (e.currentTarget.style.color = 'rgba(238,245,240,0.2)')}
             >
               ⚙ Admin
             </a>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   )

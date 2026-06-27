@@ -9,10 +9,10 @@ export default function LanguageSwitcher() {
     <div style={{
       display: 'flex',
       gap: '4px',
-      background: 'rgba(180,20,30,0.10)',
+      background: 'rgba(27,78,48,0.07)',
       borderRadius: 99,
       padding: '3px',
-      border: '1px solid rgba(180,20,30,0.18)',
+      border: '1px solid var(--border)',
     }}>
       {LANGS.map(l => (
         <motion.button
@@ -27,10 +27,11 @@ export default function LanguageSwitcher() {
             fontSize: '0.72rem',
             fontWeight: 700,
             letterSpacing: '0.04em',
+            fontFamily: 'var(--font-body, sans-serif)',
             transition: 'all 0.2s',
-            background: lang === l.code ? '#CC1020' : 'transparent',
-            color: lang === l.code ? '#ffffff' : '#8B1020',
-            boxShadow: lang === l.code ? '0 2px 10px rgba(204,16,32,0.35)' : 'none',
+            background: lang === l.code ? 'var(--green)' : 'transparent',
+            color: lang === l.code ? '#ffffff' : 'var(--ink-muted)',
+            boxShadow: lang === l.code ? '0 2px 10px rgba(27,78,48,0.3)' : 'none',
           }}
         >
           {l.native}

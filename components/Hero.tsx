@@ -11,44 +11,21 @@ const Globe = dynamic(() => import('react-globe.gl'), { ssr: false })
 const SARAWAK = { lat: 1.5533, lng: 110.3592 }
 
 export default function Hero() {
-  const starsRef = useRef<HTMLDivElement>(null)
   const [globeReady, setGlobeReady] = useState(false)
   const [dimensions, setDimensions] = useState({ w: 1200, h: 700 })
   const { t } = useLang()
-
   const words = t(T.hero.title) as string[]
 
   useEffect(() => {
-    // Build star field
-    const container = starsRef.current
-    if (!container) return
-    for (let i = 0; i < 150; i++) {
-      const s = document.createElement('div')
-      s.className = 'star'
-      const sz = Math.random() * 2.5 + 0.5
-      s.style.cssText = `
-        width:${sz}px; height:${sz}px;
-        left:${Math.random() * 100}%; top:${Math.random() * 100}%;
-        --dur:${(Math.random() * 4 + 2).toFixed(1)}s;
-        --delay:${(Math.random() * 5).toFixed(1)}s;
-      `
-      container.appendChild(s)
-    }
-
-    // Dimensions
-    const resize = () => setDimensions({
-      w: window.innerWidth,
-      h: window.innerHeight,
-    })
+    const resize = () => setDimensions({ w: window.innerWidth, h: window.innerHeight })
     resize()
     window.addEventListener('resize', resize)
     return () => window.removeEventListener('resize', resize)
   }, [])
 
-  // Slight delay before showing globe so we get the stagger
   useEffect(() => {
-    const t = setTimeout(() => setGlobeReady(true), 600)
-    return () => clearTimeout(t)
+    const id = setTimeout(() => setGlobeReady(true), 500)
+    return () => clearTimeout(id)
   }, [])
 
   const arcsData = MOCK_MESSAGES.map(m => ({
@@ -56,7 +33,7 @@ export default function Hero() {
     startLng: m.longitude,
     endLat: SARAWAK.lat,
     endLng: SARAWAK.lng,
-    color: ['rgba(255,215,0,0.9)', 'rgba(232,25,44,0.9)'],
+    color: ['rgba(200,134,10,0.7)', 'rgba(238,245,240,0.5)'],
   }))
 
   const scrollToForm = () => {
@@ -65,272 +42,232 @@ export default function Hero() {
 
   return (
     <section
-      className="relative overflow-hidden"
       style={{
         minHeight: '100vh',
-        background: 'radial-gradient(ellipse at 50% 30%, #3D0010 0%, #1a0205 60%, #08010a 100%)',
+        background: 'linear-gradient(160deg, #0F2E1C 0%, #1B4E30 55%, #0F2E1C 100%)',
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
-      {/* Sarawak flag pua kumbu stripe */}
-      <div className="pua-kumbu-bar" style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 5, opacity: 0.7 }} />
+      {/* Pua kumbu trim — top accent only, 4px */}
+      <div className="pua-stripe" />
 
-      {/* Star field */}
-      <div ref={starsRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
-
-      {/* Hornbill silhouette */}
-      <svg
-        viewBox="0 0 200 140"
-        style={{
-          position: 'absolute', right: '5%', top: '15%',
-          width: 'clamp(100px, 14vw, 180px)',
-          opacity: 0.07,
-          pointerEvents: 'none',
-          zIndex: 2,
-        }}
-      >
-        <ellipse cx="80" cy="90" rx="65" ry="38" fill="#FFD700"/>
-        <circle cx="145" cy="52" r="28" fill="#FFD700"/>
-        <path d="M 138,28 Q 178,12 195,22 Q 188,38 152,36 Z" fill="#CC1020"/>
-        <path d="M 152,52 Q 200,46 205,56 Q 200,66 152,62 Z" fill="#CC1020"/>
-        <path d="M 22,82 Q -28,105 -18,122 Q 0,112 18,94 Z" fill="#FFD700"/>
-        <path d="M 16,96 Q -34,124 -22,145 Q -4,130 14,110 Z" fill="#FFD700"/>
-        <path d="M 55,58 Q 80,34 118,46 Q 108,82 62,88 Z" fill="#C8860A"/>
-        <circle cx="152" cy="46" r="6" fill="#1A0408"/>
-        <circle cx="150" cy="44" r="2" fill="#FFD700"/>
-      </svg>
-
-      {/* Globe background — centered, large, fills hero */}
+      {/* Globe — background, right-anchored on desktop */}
       {globeReady && (
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            opacity: 0.72,
-            pointerEvents: 'none',
-          }}
-        >
+        <div style={{
+          position: 'absolute',
+          right: dimensions.w > 768 ? '-8%' : '-40%',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          opacity: 0.28,
+          pointerEvents: 'none',
+        }}>
           <Globe
-            width={Math.min(dimensions.w, 900)}
-            height={Math.min(dimensions.h, 700)}
+            width={Math.min(dimensions.w * 0.72, 720)}
+            height={Math.min(dimensions.h, 720)}
             backgroundColor="rgba(0,0,0,0)"
             globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-            atmosphereColor="#E8192C"
-            atmosphereAltitude={0.18}
+            atmosphereColor="#C8860A"
+            atmosphereAltitude={0.15}
             arcsData={arcsData}
             arcColor="color"
             arcDashLength={0.35}
             arcDashGap={0.15}
-            arcDashAnimateTime={2400}
-            arcStroke={0.6}
-            htmlElementsData={MOCK_MESSAGES}
-            htmlLat={(d: object) => (d as typeof MOCK_MESSAGES[0]).latitude}
-            htmlLng={(d: object) => (d as typeof MOCK_MESSAGES[0]).longitude}
-            htmlElement={(d: object) => {
-              const m = d as typeof MOCK_MESSAGES[0]
-              const el = document.createElement('div')
-              el.className = 'globe-heart'
-              el.innerHTML = '❤️'
-              el.style.fontSize = '20px'
-              el.title = `${m.name} · ${m.city}`
-              return el
-            }}
+            arcDashAnimateTime={2800}
+            arcStroke={0.5}
             enablePointerInteraction={false}
           />
         </div>
       )}
 
-      {/* Dark overlay — stronger at bottom so text pops */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: `
-            radial-gradient(ellipse at 50% 50%, rgba(8,8,16,0.1) 0%, rgba(8,8,16,0.6) 100%),
-            linear-gradient(to bottom, rgba(8,8,16,0.2) 0%, rgba(8,8,16,0.0) 40%, rgba(8,8,16,0.65) 100%)
-          `,
-          pointerEvents: 'none',
-        }}
-      />
+      {/* Left content — vertically centered */}
+      <div style={{
+        position: 'relative',
+        zIndex: 10,
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        padding: 'clamp(5rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem)',
+        maxWidth: 1100,
+        margin: '0 auto',
+        width: '100%',
+      }}>
+        <div style={{ maxWidth: 680 }}>
 
-      {/* Content overlay */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 10,
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          padding: 'clamp(1.5rem, 4vw, 3rem)',
-        }}
-      >
-        {/* Eyebrow */}
-        <motion.div
-          initial={{ opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.3 }}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: 'rgba(232,25,44,0.12)',
-            border: '1px solid rgba(232,25,44,0.35)',
-            borderRadius: 99,
-            padding: '6px 18px',
-            marginBottom: '2rem',
-            color: '#ffaaaa',
-            fontSize: '0.78rem',
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            fontWeight: 600,
-          }}
-        >
-          <span style={{ animation: 'heartPulse 2s infinite', display: 'inline-block' }}>❤️</span>
-          {t(T.hero.eyebrow) as string}
-          <span style={{ opacity: 0.6, marginLeft: 4 }}>· Bumi Kenyalang</span>
-        </motion.div>
-
-        {/* Main title — word by word stagger */}
-        <h1
-          style={{
-            fontFamily: 'var(--font-playfair, Georgia, serif)',
-            fontSize: 'clamp(3rem, 9vw, 7rem)',
-            fontWeight: 900,
-            fontStyle: 'italic',
-            lineHeight: 1.05,
-            marginBottom: '1.5rem',
-            maxWidth: 900,
-          }}
-        >
-          {words.map((word, i) => (
-            <motion.span
-              key={`${word}-${i}`}
-              initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ duration: 0.9, delay: 0.6 + i * 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
-              style={{
-                display: 'inline-block',
-                color: i === 2 ? 'transparent' : '#F5F0E8',
-                background: i === 2 ? 'linear-gradient(90deg, #E8192C 0%, #FFD700 60%, #E8192C 100%)' : undefined,
-                backgroundSize: i === 2 ? '200% auto' : undefined,
-                WebkitBackgroundClip: i === 2 ? 'text' : undefined,
-                WebkitTextFillColor: i === 2 ? 'transparent' : undefined,
-                backgroundClip: i === 2 ? 'text' : undefined,
-                animation: i === 2 ? 'shimmer 5s linear infinite' : undefined,
-                marginRight: i < words.length - 1 ? '0.3em' : 0,
-              }}
-            >
-              {word}
-            </motion.span>
-          ))}
-        </h1>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.1, delay: 1.4 }}
-          style={{
-            fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            color: 'rgba(245,240,232,0.65)',
-            marginBottom: '0.6rem',
-            fontWeight: 500,
-          }}
-        >
-          {t(T.hero.tagline) as string}
-        </motion.p>
-
-        {/* Divider */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.9, delay: 1.65 }}
-          style={{
-            width: 80,
-            height: 2,
-            background: 'linear-gradient(90deg, #E8192C, #FFD700)',
-            borderRadius: 2,
-            margin: '1.5rem auto 2.5rem',
-          }}
-        />
-
-        {/* Quote */}
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 1.85 }}
-          style={{
-            fontSize: 'clamp(1rem, 1.8vw, 1.15rem)',
-            color: 'rgba(245,240,232,0.55)',
-            fontStyle: 'italic',
-            marginBottom: '3rem',
-            maxWidth: 500,
-          }}
-        >
-          {t(T.hero.quote) as string}
-        </motion.p>
-
-        {/* CTA button */}
-        <motion.button
-          onClick={scrollToForm}
-          className="btn-primary"
-          initial={{ opacity: 0, scale: 0.88 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 2.1 }}
-          whileHover={{ scale: 1.06 }}
-          whileTap={{ scale: 0.96 }}
-          style={{
-            padding: '18px 52px',
-            fontSize: 'clamp(1rem, 2vw, 1.15rem)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-          }}
-        >
-          <motion.span
-            animate={{ scale: [1, 1.3, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            ❤️
-          </motion.span>
-          {t(T.hero.cta) as string}
-        </motion.button>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.8, duration: 1 }}
-          style={{ position: 'absolute', bottom: '2.5rem', left: '50%', transform: 'translateX(-50%)' }}
-        >
+          {/* Campaign badge */}
           <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
             style={{
-              display: 'flex',
-              flexDirection: 'column',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
-              color: 'rgba(245,240,232,0.3)',
-              fontSize: '0.72rem',
+              gap: 10,
+              border: '1px solid rgba(200,134,10,0.45)',
+              borderRadius: 6,
+              padding: '6px 16px',
+              marginBottom: '2.25rem',
+              color: '#C8860A',
+              fontSize: '0.75rem',
+              fontFamily: 'var(--font-body, sans-serif)',
+              fontWeight: 700,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
             }}
           >
-            <span>{t(T.hero.scroll) as string}</span>
-            <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
-              <path d="M8 2v20M2 16l6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <span style={{
+              width: 6, height: 6, borderRadius: '50%',
+              background: '#C8860A',
+              animation: 'heartPulse 2s ease-in-out infinite',
+              display: 'inline-block',
+            }} />
+            {t(T.hero.eyebrow) as string} · Bumi Kenyalang
           </motion.div>
-        </motion.div>
+
+          {/* Main headline */}
+          <h1
+            style={{
+              fontFamily: 'var(--font-display, EB Garamond, Georgia, serif)',
+              fontSize: 'clamp(3.2rem, 7vw, 5.8rem)',
+              fontWeight: 700,
+              lineHeight: 1.05,
+              letterSpacing: '-0.02em',
+              color: '#EEF5F0',
+              marginBottom: '1.75rem',
+              textWrap: 'balance',
+            }}
+          >
+            {words.map((word, i) => (
+              <motion.span
+                key={`${word}-${i}`}
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.75, delay: 0.4 + i * 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
+                style={{
+                  display: 'inline-block',
+                  marginRight: i < words.length - 1 ? '0.28em' : 0,
+                  color: i === 2 ? '#C8860A' : '#EEF5F0',
+                }}
+              >
+                {word}
+              </motion.span>
+            ))}
+          </h1>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.9, delay: 0.9 }}
+            style={{
+              fontSize: 'clamp(1rem, 1.8vw, 1.18rem)',
+              color: 'rgba(238,245,240,0.62)',
+              fontFamily: 'var(--font-body, sans-serif)',
+              lineHeight: 1.75,
+              marginBottom: '0.5rem',
+              maxWidth: 52,
+            }}
+          >
+            {t(T.hero.tagline) as string}
+          </motion.p>
+
+          {/* Gold rule */}
+          <motion.div
+            initial={{ scaleX: 0, originX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.8, delay: 1.1 }}
+            style={{
+              width: 56,
+              height: 2,
+              background: '#C8860A',
+              borderRadius: 2,
+              margin: '1.5rem 0 2.25rem',
+            }}
+          />
+
+          {/* Quote */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.9, delay: 1.3 }}
+            style={{
+              fontSize: 'clamp(1rem, 1.6vw, 1.1rem)',
+              fontFamily: 'var(--font-display, EB Garamond, Georgia, serif)',
+              fontStyle: 'italic',
+              color: 'rgba(238,245,240,0.48)',
+              marginBottom: '2.75rem',
+              maxWidth: 480,
+              lineHeight: 1.7,
+            }}
+          >
+            {t(T.hero.quote) as string}
+          </motion.p>
+
+          {/* CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.5 }}
+            style={{ display: 'flex', gap: 14, flexWrap: 'wrap', alignItems: 'center' }}
+          >
+            <motion.button
+              onClick={scrollToForm}
+              className="btn-primary"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+              style={{ fontSize: '1rem', padding: '16px 44px' }}
+            >
+              {t(T.hero.cta) as string}
+            </motion.button>
+
+            <span style={{
+              color: 'rgba(238,245,240,0.38)',
+              fontSize: '0.82rem',
+              fontFamily: 'var(--font-body, sans-serif)',
+              letterSpacing: '0.05em',
+            }}>
+              {t(T.hero.tagline) as string}
+            </span>
+          </motion.div>
+        </div>
       </div>
+
+      {/* Scroll cue */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2.2, duration: 1 }}
+        style={{
+          position: 'absolute',
+          bottom: '2.5rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 10,
+        }}
+      >
+        <motion.div
+          animate={{ y: [0, 7, 0] }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 6,
+            color: 'rgba(238,245,240,0.28)',
+            fontSize: '0.7rem',
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            fontFamily: 'var(--font-body, sans-serif)',
+          }}
+        >
+          <span>{t(T.hero.scroll) as string}</span>
+          <svg width="14" height="22" viewBox="0 0 14 22" fill="none">
+            <path d="M7 2v18M2 15l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </motion.div>
+      </motion.div>
     </section>
   )
 }

@@ -1,112 +1,87 @@
 @import "tailwindcss";
 
+/* ── Design tokens ─────────────────────────────────────────── */
 :root {
-  --sarawak-red: #CC1020;
-  --sarawak-crimson: #E8192C;
-  --sarawak-gold: #C8860A;
-  --sarawak-gold-bright: #FFD700;
-  --bg-primary: #FFFBF5;
-  --bg-secondary: #FFF5EC;
-  --text-heading: #1A0408;
-  --text-body: #4A1A1A;
-  --text-muted: #9A5A5A;
-  --cream: #FFFBF5;
-  /* Legacy */
-  --sarawak-dark: #080810;
-  --background: #FFFBF5;
-  --foreground: #1A0408;
-  /* Sarawak extended palette */
-  --sarawak-jungle: #1B4E30;
-  --sarawak-forest: #2D6A35;
-  --sarawak-gold-light: #FFE066;
-  --sarawak-earth: #8B5E3C;
+  /* Brand */
+  --green:        #1B4E30;   /* Sarawak forest — primary */
+  --green-dark:   #0F2E1C;   /* deep jungle */
+  --green-mid:    #2D6A45;   /* mid forest */
+  --green-light:  #EBF3EE;   /* tint for hover/bg */
+  --gold:         #C8860A;   /* burnished gold — accent */
+  --gold-light:   #F5E6C0;   /* gold tint */
+  --red:          #CC1020;   /* CTA only */
+  --red-dark:     #A30D19;
+
+  /* Surface */
+  --bg:           #F7F8F5;   /* near-white, green-tinted */
+  --bg-dark:      #0F2E1C;   /* dark section bg (hero, globe) */
+  --surface:      #FFFFFF;
+  --surface-green:#EBF3EE;
+
+  /* Text */
+  --ink:          #0F1F15;   /* near-black, green-tinted */
+  --ink-mid:      #2C4A35;
+  --ink-muted:    #5A7A62;
+  --ink-faint:    #8FAB96;
+  --on-dark:      #EEF5F0;
+  --on-dark-muted:rgba(238,245,240,0.55);
+
+  /* Border */
+  --border:       rgba(27,78,48,0.14);
+  --border-gold:  rgba(200,134,10,0.25);
+
+  /* Radius */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 24px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 4px rgba(15,30,21,0.08);
+  --shadow-md: 0 4px 20px rgba(15,30,21,0.10);
+  --shadow-lg: 0 12px 48px rgba(15,30,21,0.13);
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
+/* ── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-body);
-  font-family: var(--font-inter, 'Inter', sans-serif);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body, 'Source Sans 3', system-ui, sans-serif);
+  font-size: 1rem;
+  line-height: 1.65;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #FFF5EC; }
-::-webkit-scrollbar-thumb { background: var(--sarawak-red); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #E8192C; }
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
 
-/* ---- Keyframe Animations ---- */
-
-@keyframes heartPulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 6px #CC1020aa);
-    transform: scale(1);
-  }
-  50% {
-    filter: drop-shadow(0 0 18px #E8192Cff) drop-shadow(0 0 32px #FFD70066);
-    transform: scale(1.2);
-  }
+/* ── Typography ─────────────────────────────────────────────── */
+.font-display {
+  font-family: var(--font-display, 'EB Garamond', Georgia, serif);
 }
 
-@keyframes floatHeart {
-  0%   { transform: translateY(0) rotate(-3deg); }
-  50%  { transform: translateY(-14px) rotate(3deg); }
-  100% { transform: translateY(0) rotate(-3deg); }
+h1, h2, h3, h4 {
+  font-family: var(--font-display, 'EB Garamond', Georgia, serif);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--ink);
 }
 
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.15; transform: scale(0.7); }
-  50%       { opacity: 0.9; transform: scale(1.3); }
-}
-
-@keyframes glowPulse {
-  0%, 100% {
-    text-shadow:
-      0 0 20px rgba(204, 16, 32, 0.4),
-      0 0 60px rgba(204, 16, 32, 0.2);
-  }
-  50% {
-    text-shadow:
-      0 0 40px rgba(204, 16, 32, 0.8),
-      0 0 80px rgba(204, 16, 32, 0.4),
-      0 0 120px rgba(255, 215, 0, 0.3);
-  }
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(32px); }
+/* ── Keyframes ─────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes scanline {
-  0%   { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
-}
-
-@keyframes borderGlow {
-  0%, 100% { border-color: rgba(204, 16, 32, 0.12); }
-  50%       { border-color: rgba(204, 16, 32, 0.25); }
-}
-
-@keyframes progressShimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50%       { transform: scale(1.25); opacity: 1; }
 }
 
 @keyframes heartRain {
@@ -116,263 +91,264 @@ body {
   100% { transform: translateY(120vh) rotate(var(--rot, 0deg)); opacity: 0; }
 }
 
+@keyframes progressFill {
+  from { width: 0; }
+}
+
 @keyframes puaPulse {
   0%, 100% { r: 5; opacity: 0.9; }
-  50% { r: 8; opacity: 0.6; }
+  50%       { r: 8; opacity: 0.6; }
 }
 
-/* ---- Utility Classes ---- */
-
-.font-playfair {
-  font-family: var(--font-playfair, 'Playfair Display', Georgia, serif);
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
 }
 
-.text-glow-red {
-  animation: glowPulse 3s ease-in-out infinite;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
-.shimmer-gold {
-  background: linear-gradient(90deg,
-    #FFD700 0%, #ffaa00 25%, #FFD700 50%, #CC1020 75%, #FFD700 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 5s linear infinite;
-}
-
-/* Dark glass — for hero/globe sections */
-.glass {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-}
-
-.glass-red {
-  background: rgba(204, 16, 32, 0.06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(204, 16, 32, 0.2);
-  border-radius: 20px;
-}
-
-/* Light glass — for cream/peach sections */
-.glass-light {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(204, 16, 32, 0.10);
-  border-radius: 20px;
-  box-shadow: 0 4px 32px rgba(180, 20, 20, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #E8192C 0%, #CC1020 50%, #ff3344 100%);
-  color: #fff;
-  font-weight: 700;
-  border-radius: 14px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 24px rgba(204, 16, 32, 0.45);
-  letter-spacing: 0.03em;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 40px rgba(204, 16, 32, 0.65), 0 0 60px rgba(255, 215, 0, 0.15);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
+/* ── Layout ─────────────────────────────────────────────────── */
 .section-pad {
-  padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 4vw, 3rem);
+  padding: clamp(5rem, 9vw, 8rem) clamp(1.25rem, 5vw, 3.5rem);
 }
 
-/* Dark section titles (hero, globe) */
+.container {
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
+/* ── Section headings ───────────────────────────────────────── */
 .section-title {
-  font-family: var(--font-playfair, 'Playfair Display', Georgia, serif);
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-family: var(--font-display, 'EB Garamond', Georgia, serif);
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
   font-weight: 700;
-  font-style: italic;
-  color: var(--cream);
+  color: var(--ink);
   text-align: center;
-  line-height: 1.15;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+
+.section-title--light {
+  color: var(--on-dark);
 }
 
 .section-sub {
   text-align: center;
-  color: rgba(245, 240, 232, 0.5);
-  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
-  margin-top: 0.5rem;
-  letter-spacing: 0.03em;
+  color: var(--ink-muted);
+  font-size: clamp(1rem, 1.8vw, 1.12rem);
+  margin-top: 0.75rem;
+  max-width: 52ch;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
 }
 
-/* Light section titles (cream/peach bg) */
-.section-title-light {
-  font-family: var(--font-playfair, 'Playfair Display', Georgia, serif);
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 700;
-  font-style: italic;
-  color: var(--text-heading);
-  text-align: center;
-  line-height: 1.15;
+.section-sub--light {
+  color: var(--on-dark-muted);
 }
 
-.section-sub-light {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
-  margin-top: 0.5rem;
-  letter-spacing: 0.03em;
-}
-
-/* White text titles (for vivid colored bg like word cloud) */
-.section-title-white {
-  font-family: var(--font-playfair, 'Playfair Display', Georgia, serif);
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 700;
-  font-style: italic;
-  color: #ffffff;
-  text-align: center;
-  line-height: 1.15;
-}
-
-.section-sub-white {
-  text-align: center;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
-  margin-top: 0.5rem;
-  letter-spacing: 0.03em;
-}
-
-.divider {
-  width: 72px;
-  height: 3px;
-  background: linear-gradient(90deg, var(--sarawak-red), var(--sarawak-gold-bright));
-  margin: 1.25rem auto 3.5rem;
+/* Gold rule divider */
+.rule {
+  width: 48px;
+  height: 2px;
+  background: var(--gold);
   border-radius: 2px;
+  margin: 1.5rem auto 3.5rem;
 }
 
-/* Stars */
-.star {
-  position: absolute;
-  background: #fff;
-  border-radius: 50%;
-  animation: twinkle var(--dur, 3s) ease-in-out var(--delay, 0s) infinite;
-}
-
-/* Animate heart-glow for globe markers */
-.globe-heart {
-  animation: heartPulse 2.2s ease-in-out infinite;
-  cursor: pointer;
-  user-select: none;
-  line-height: 1;
-}
-
-/* Input styling — dark bg variant */
-.input-field {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 215, 0, 0.18);
-  border-radius: 12px;
-  padding: 13px 16px;
-  color: #F5F0E8;
-  font-size: 0.95rem;
-  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-  outline: none;
-  font-family: var(--font-inter, sans-serif);
-}
-
-.input-field::placeholder {
-  color: rgba(245, 240, 232, 0.28);
-}
-
-.input-field:focus {
-  border-color: rgba(255, 215, 0, 0.6);
-  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.12);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.input-field option {
-  background: #14141f;
-  color: #F5F0E8;
-}
-
-/* Input styling — light bg variant */
-.input-field-light {
-  width: 100%;
-  background: #ffffff;
-  border: 1.5px solid rgba(204, 16, 32, 0.18);
-  border-radius: 12px;
-  padding: 13px 16px;
-  color: #1A0408;
-  font-size: 0.95rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  outline: none;
-  font-family: var(--font-inter, sans-serif);
-}
-
-.input-field-light::placeholder {
-  color: rgba(100, 30, 30, 0.3);
-}
-
-.input-field-light:focus {
-  border-color: #CC1020;
-  box-shadow: 0 0 0 3px rgba(204, 16, 32, 0.10);
-}
-
-.input-field-light option {
-  background: #fff;
-  color: #1A0408;
-}
-
-/* Card hover lift */
-.card-lift {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.card-lift:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 50px rgba(204, 16, 32, 0.14), 0 8px 20px rgba(0,0,0,0.06);
-}
-
-/* Progress bar shimmer overlay */
-.progress-shimmer {
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(255,255,255,0.25) 50%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  animation: progressShimmer 2s linear infinite;
-}
-
-/* Sticky nav — light bg */
+/* ── Nav ────────────────────────────────────────────────────── */
 .sticky-nav {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   z-index: 100;
-  padding: 14px 24px;
+  padding: 14px clamp(1.25rem, 4vw, 3rem);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: rgba(255, 251, 245, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(204, 16, 32, 0.12);
-  transition: opacity 0.3s, transform 0.3s;
+  background: rgba(247,248,245,0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  transition: opacity 0.3s;
 }
 
-/* Heart rain animation */
+/* ── Buttons ────────────────────────────────────────────────── */
+.btn-primary {
+  background: var(--red);
+  color: #fff;
+  font-family: var(--font-body, sans-serif);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: var(--r-md);
+  border: none;
+  cursor: pointer;
+  padding: 14px 36px;
+  letter-spacing: 0.03em;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 2px 12px rgba(204,16,32,0.28);
+}
+
+.btn-primary:hover {
+  background: var(--red-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(204,16,32,0.38);
+}
+
+.btn-primary:active { transform: translateY(0); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--green);
+  font-family: var(--font-body, sans-serif);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--r-md);
+  border: 1.5px solid var(--green);
+  cursor: pointer;
+  padding: 13px 32px;
+  letter-spacing: 0.02em;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-outline:hover {
+  background: var(--green);
+  color: #fff;
+}
+
+/* ── Cards ──────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.card--green {
+  background: var(--green-light);
+  border-color: rgba(27,78,48,0.18);
+}
+
+/* ── Inputs ─────────────────────────────────────────────────── */
+.input-field-light {
+  width: 100%;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 12px 16px;
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-family: var(--font-body, sans-serif);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.input-field-light::placeholder {
+  color: var(--ink-faint);
+}
+
+.input-field-light:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(27,78,48,0.10);
+}
+
+.input-field-light option {
+  background: #fff;
+  color: var(--ink);
+}
+
+/* Dark input variant (hero form) */
+.input-field {
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(238,245,240,0.18);
+  border-radius: var(--r-sm);
+  padding: 12px 16px;
+  color: var(--on-dark);
+  font-size: 0.95rem;
+  font-family: var(--font-body, sans-serif);
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.input-field::placeholder { color: rgba(238,245,240,0.35); }
+.input-field:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,134,10,0.12); }
+.input-field option { background: var(--bg-dark); color: var(--on-dark); }
+
+/* ── Dark glass (globe/hero sections) ──────────────────────── */
+.glass {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: var(--r-lg);
+}
+
+/* Legacy aliases — keep existing component references working */
+.glass-light {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-lift {
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+.card-lift:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+/* ── Progress bar ───────────────────────────────────────────── */
+.progress-track {
+  background: rgba(27,78,48,0.10);
+  border-radius: 99px;
+  height: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green) 0%, var(--green-mid) 60%, var(--gold) 100%);
+  border-radius: 99px;
+  transition: width 1.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Legacy shimmer */
+.progress-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.22) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2.2s linear infinite;
+}
+
+/* ── Accent stripe (pua kumbu — used ONLY as trim) ──────────── */
+.pua-stripe {
+  height: 4px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--green)   0px, var(--green)   6px,
+    var(--gold)    6px, var(--gold)    12px,
+    #CC1020        12px, #CC1020       18px,
+    var(--gold)    18px, var(--gold)   24px
+  );
+  width: 100%;
+}
+
+/* ── Heart rain overlay ─────────────────────────────────────── */
 .heart-rain {
   position: fixed;
   inset: 0;
@@ -389,36 +365,23 @@ body {
   --rot: var(--rotation, 0deg);
 }
 
-/* Leaderboard bar */
+/* ── Leaderboard ────────────────────────────────────────────── */
 .lb-bar {
-  height: 6px;
-  background: linear-gradient(90deg, #CC1020, #FFD700);
+  height: 5px;
+  background: linear-gradient(90deg, var(--green), var(--gold));
   border-radius: 99px;
   transition: width 1.2s ease;
 }
 
-/* Pua kumbu diamond pattern for light sections */
-.bg-pattern {
-  background-image:
-    repeating-linear-gradient(45deg, rgba(204,16,32,0.045) 0px, rgba(204,16,32,0.045) 1.5px, transparent 1.5px, transparent 16px),
-    repeating-linear-gradient(-45deg, rgba(204,16,32,0.045) 0px, rgba(204,16,32,0.045) 1.5px, transparent 1.5px, transparent 16px);
+/* ── Globe heart marker ─────────────────────────────────────── */
+.globe-heart {
+  animation: heartPulse 2.2s ease-in-out infinite;
+  cursor: pointer;
+  user-select: none;
+  line-height: 1;
 }
 
-/* Sarawak flag / pua kumbu horizontal stripe */
-.pua-kumbu-bar {
-  height: 8px;
-  background: repeating-linear-gradient(
-    90deg,
-    #CC1020 0px, #CC1020 8px,
-    #FFD700 8px, #FFD700 16px,
-    #1A0408 16px, #1A0408 24px,
-    #FFD700 24px, #FFD700 32px
-  );
-  width: 100%;
-}
-
-/* Responsive grid */
+/* ── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .globe-height { height: 380px !important; }
   .form-grid-2 { grid-template-columns: 1fr !important; }
 }

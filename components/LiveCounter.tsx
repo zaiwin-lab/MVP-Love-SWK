@@ -38,117 +38,132 @@ export default function LiveCounter() {
   const pct = Math.min((stats.total / MILESTONE) * 100, 100)
 
   const STATS = [
-    { labelKey: T.counter.messages, value: stats.total, icon: '💌' },
-    { labelKey: T.counter.countries, value: stats.countries, icon: '🌍' },
-    { labelKey: T.counter.cities, value: stats.cities, icon: '🏙️' },
-    { labelKey: T.counter.hearts, value: stats.participants, icon: '❤️' },
+    { labelKey: T.counter.messages, value: stats.total,      icon: '💌', label: 'Messages of love' },
+    { labelKey: T.counter.countries, value: stats.countries, icon: '🌍', label: 'Countries reached' },
+    { labelKey: T.counter.cities,    value: stats.cities,    icon: '🏙️', label: 'Cities represented' },
+    { labelKey: T.counter.hearts,    value: stats.participants, icon: '❤️', label: 'Hearts planted' },
   ]
 
   return (
     <section
       ref={ref}
       className="section-pad"
-      style={{
-        background: '#FFFBF5',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}
     >
-      <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+      <div className="container">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.7 }}
           style={{ textAlign: 'center', marginBottom: '3.5rem' }}
         >
-          <h2 className="section-title-light">{t(T.counter.title) as string}</h2>
-          <p className="section-sub-light">{t(T.counter.sub) as string}</p>
-          <div className="divider" />
+          <h2 className="section-title">{t(T.counter.title) as string}</h2>
+          <p className="section-sub">{t(T.counter.sub) as string}</p>
+          <div className="rule" />
         </motion.div>
 
-        {/* Stat cards */}
+        {/* Stats row */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '1rem',
-          marginBottom: '2.5rem',
+          gap: '1px',
+          background: 'var(--border)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--r-lg)',
+          overflow: 'hidden',
+          marginBottom: '3rem',
         }}>
           {STATS.map((stat, i) => (
             <motion.div
               key={i}
-              className="glass-light card-lift"
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : {}}
               transition={{ duration: 0.6, delay: i * 0.1 }}
-              style={{ padding: '2rem 1.5rem', textAlign: 'center' }}
+              style={{
+                background: 'var(--surface)',
+                padding: '2.25rem 1.75rem',
+                textAlign: 'center',
+              }}
             >
-              <div style={{ fontSize: '2.2rem', marginBottom: '0.75rem' }}>{stat.icon}</div>
+              <div style={{ fontSize: '1.8rem', marginBottom: '0.6rem', lineHeight: 1 }}>
+                {stat.icon}
+              </div>
               <div
-                className="font-playfair"
                 style={{
-                  fontSize: 'clamp(2.4rem, 5vw, 3.2rem)',
-                  fontWeight: 900,
-                  color: '#CC1020',
+                  fontFamily: 'var(--font-display, EB Garamond, Georgia, serif)',
+                  fontSize: 'clamp(2.4rem, 5vw, 3.4rem)',
+                  fontWeight: 700,
+                  color: 'var(--green)',
                   lineHeight: 1,
                   marginBottom: '0.4rem',
+                  letterSpacing: '-0.02em',
                 }}
               >
                 {inView
-                  ? <CountUp end={stat.value} duration={2.2} delay={0.2 + i * 0.1} separator="," />
+                  ? <CountUp end={stat.value} duration={2.0} delay={0.2 + i * 0.1} separator="," />
                   : '0'}
               </div>
-              <div style={{ color: 'rgba(74,26,26,0.6)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>
+              <div style={{
+                color: 'var(--ink-muted)',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                fontFamily: 'var(--font-body, sans-serif)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+              }}>
                 {t(stat.labelKey) as string}
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Milestone progress */}
+        {/* Milestone bar */}
         <motion.div
-          className="glass-light"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          style={{ padding: '1.75rem 2rem' }}
+          transition={{ duration: 0.7, delay: 0.5 }}
+          style={{
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--r-lg)',
+            padding: '1.75rem 2rem',
+          }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', alignItems: 'center' }}>
-            <span style={{ color: 'rgba(74,26,26,0.7)', fontSize: '0.9rem', fontWeight: 600 }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '0.875rem',
+          }}>
+            <span style={{ color: 'var(--ink-mid)', fontSize: '0.9rem', fontWeight: 600, fontFamily: 'var(--font-body, sans-serif)' }}>
               {(t(T.counter.milestone) as string).replace('{n}', MILESTONE.toLocaleString())}
             </span>
-            <span style={{ color: '#CC1020', fontWeight: 800, fontSize: '1.05rem' }}>
+            <span style={{
+              color: 'var(--green)',
+              fontWeight: 800,
+              fontFamily: 'var(--font-display, serif)',
+              fontSize: '1.1rem',
+            }}>
               {Math.round(pct)}%
             </span>
           </div>
 
-          {/* Track */}
-          <div style={{
-            background: 'rgba(204,16,32,0.08)',
-            borderRadius: 99,
-            height: 14,
-            overflow: 'hidden',
-            position: 'relative',
-          }}>
-            {/* Fill */}
+          <div className="progress-track">
             <motion.div
-              style={{
-                position: 'absolute',
-                left: 0, top: 0, bottom: 0,
-                background: 'linear-gradient(90deg, #CC1020 0%, #E8192C 50%, #FFD700 100%)',
-                borderRadius: 99,
-              }}
+              className="progress-fill"
               initial={{ width: 0 }}
               animate={inView ? { width: `${pct}%` } : {}}
               transition={{ duration: 1.8, delay: 0.8, ease: [0.34, 1.56, 0.64, 1] }}
             />
-            {/* Shimmer overlay */}
-            <div
-              className="progress-shimmer"
-              style={{ position: 'absolute', inset: 0, borderRadius: 99 }}
-            />
           </div>
 
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', textAlign: 'center', marginTop: '0.75rem' }}>
+          <p style={{
+            color: 'var(--ink-faint)',
+            fontSize: '0.78rem',
+            textAlign: 'center',
+            marginTop: '0.875rem',
+            fontFamily: 'var(--font-body, sans-serif)',
+          }}>
             {t(T.counter.closer) as string}
           </p>
         </motion.div>

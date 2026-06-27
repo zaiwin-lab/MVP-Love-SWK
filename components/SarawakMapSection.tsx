@@ -93,13 +93,13 @@ const DIVISIONS = [
 export const SARAWAK_DIVISION_OPTIONS = DIVISIONS.map(d => ({ id: d.id, name: d.name }))
 
 function heatFill(count: number, hovered: boolean, isNew: boolean): string {
-  if (isNew)          return 'rgba(232,25,44,0.58)'
-  if (hovered)        return 'rgba(204,16,32,0.42)'
+  if (isNew)          return 'rgba(200,134,10,0.55)'
+  if (hovered)        return 'rgba(27,78,48,0.42)'
   if (count === 0)    return 'rgba(27,78,48,0.07)'
-  if (count < 15)     return 'rgba(204,16,32,0.14)'
-  if (count < 30)     return 'rgba(204,16,32,0.25)'
-  if (count < 55)     return 'rgba(204,16,32,0.37)'
-  return                     'rgba(204,16,32,0.52)'
+  if (count < 15)     return 'rgba(27,78,48,0.18)'
+  if (count < 30)     return 'rgba(27,78,48,0.30)'
+  if (count < 55)     return 'rgba(27,78,48,0.44)'
+  return                     'rgba(27,78,48,0.60)'
 }
 
 // Golden-angle spiral — distributes dots evenly within a division area
@@ -156,37 +156,33 @@ export default function SarawakMapSection() {
     .slice(0, 5)
 
   return (
-    <section id="sarawak-map" className="section-pad bg-pattern" style={{ background: '#FFFBF5', position: 'relative', overflow: 'hidden' }}>
-      <div className="pua-kumbu-bar" style={{ position: 'absolute', top: 0, left: 0, right: 0 }} />
+    <section id="sarawak-map" className="section-pad" style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
 
-      <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
 
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.8 }}
-          style={{ textAlign: 'center', marginBottom: '3rem' }}
+          style={{ textAlign: 'center', marginBottom: '3.5rem' }}
         >
-          <motion.div
-            animate={{ scale: [1, 1.04, 1] }} transition={{ duration: 2.8, repeat: Infinity }}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: 'rgba(204,16,32,0.08)', border: '1px solid rgba(204,16,32,0.22)',
-              borderRadius: 99, padding: '6px 18px', marginBottom: '1.2rem',
-              fontSize: '0.75rem', letterSpacing: '0.12em', textTransform: 'uppercase',
-              color: '#CC1020', fontWeight: 700,
-            }}
-          >
-            ❤ {total.toLocaleString()} {t(LANG_T.total)}
-          </motion.div>
-          <h2 className="section-title-light">{t(LANG_T.title)}</h2>
-          <p className="section-sub-light">{t(LANG_T.sub)}</p>
-          <div className="divider" />
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            background: 'var(--green-light)', border: '1px solid var(--border)',
+            borderRadius: 99, padding: '6px 18px', marginBottom: '1.2rem',
+            fontSize: '0.75rem', letterSpacing: '0.12em', textTransform: 'uppercase',
+            color: 'var(--green)', fontWeight: 700, fontFamily: 'var(--font-body, sans-serif)',
+          }}>
+            {total.toLocaleString()} {t(LANG_T.total)}
+          </div>
+          <h2 className="section-title">{t(LANG_T.title)}</h2>
+          <p className="section-sub">{t(LANG_T.sub)}</p>
+          <div className="rule" />
         </motion.div>
 
         {/* SVG Map */}
         <motion.div
-          className="glass-light"
+          className="card"
           initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }} transition={{ duration: 1 }}
           style={{ padding: '1.5rem 1rem', position: 'relative' }}
@@ -226,7 +222,7 @@ export default function SarawakMapSection() {
                   <polygon
                     points={div.points}
                     fill={heatFill(count, isH, isN)}
-                    stroke={isH || isN ? '#CC1020' : 'rgba(150,35,35,0.45)'}
+                    stroke={isH || isN ? '#C8860A' : 'rgba(27,78,48,0.4)'}
                     strokeWidth={isH || isN ? 2 : 0.9}
                     strokeLinejoin="round"
                     filter={isN ? 'url(#divGlow)' : undefined}
@@ -235,7 +231,7 @@ export default function SarawakMapSection() {
 
                   {/* Heart dots scattered within division */}
                   {dots.map((p, i) => (
-                    <circle key={i} cx={p.x} cy={p.y} r={2.4} fill="#E8192C" opacity={0.72} filter="url(#dotGlow)"/>
+                    <circle key={i} cx={p.x} cy={p.y} r={2.4} fill="#C8860A" opacity={0.75} filter="url(#dotGlow)"/>
                   ))}
 
                   {/* Division label + count */}
@@ -243,18 +239,18 @@ export default function SarawakMapSection() {
                     <g style={{ pointerEvents: 'none' }}>
                       <text x={div.cx} y={div.cy - 5} fontSize={div.id === 'kuching' ? 9.5 : 7.5}
                         fontWeight={isH || div.id === 'kuching' ? '700' : '500'}
-                        fill={isH ? '#CC1020' : '#1A0408'} textAnchor="middle" fontFamily="Inter,sans-serif">
+                        fill={isH ? '#C8860A' : '#0F2E1C'} textAnchor="middle" fontFamily="sans-serif">
                         {div.name}
                       </text>
-                      <text x={div.cx} y={div.cy + 9} fontSize="7" fill="#CC1020" textAnchor="middle" fontFamily="Inter,sans-serif">
-                        ❤ {count}
+                      <text x={div.cx} y={div.cy + 9} fontSize="7" fill="#C8860A" textAnchor="middle" fontFamily="sans-serif">
+                        {count}
                       </text>
                     </g>
                   )}
 
                   {/* Pulse ring on new heart */}
                   {isN && (
-                    <circle cx={div.cx} cy={div.cy} r="22" fill="none" stroke="#E8192C" strokeWidth="2" opacity="0.45"
+                    <circle cx={div.cx} cy={div.cy} r="22" fill="none" stroke="#C8860A" strokeWidth="2" opacity="0.5"
                       style={{ animation: 'heartPulse 1.2s ease-out' }}/>
                   )}
                 </g>
@@ -263,34 +259,31 @@ export default function SarawakMapSection() {
 
             {/* Brunei — sits between Miri and Limbang on the NE coast */}
             <circle cx="513" cy="68" r="4.5" fill="rgba(200,134,10,0.22)" stroke="#C8860A" strokeWidth="0.8"/>
-            <text x="513" y="58" fontSize="6.5" fill="rgba(139,94,60,0.65)" textAnchor="middle" fontStyle="italic" fontFamily="Inter,sans-serif">Brunei</text>
+            <text x="513" y="58" fontSize="6.5" fill="rgba(27,78,48,0.55)" textAnchor="middle" fontStyle="italic" fontFamily="sans-serif">Brunei</text>
 
             {/* Hornbill watermark */}
-            <g transform="translate(650,355) scale(0.5)" opacity="0.09">
-              <ellipse cx="20" cy="30" rx="18" ry="12" fill="#1A0408"/>
-              <circle cx="38" cy="18" r="9" fill="#1A0408"/>
+            <g transform="translate(650,355) scale(0.5)" opacity="0.07">
+              <ellipse cx="20" cy="30" rx="18" ry="12" fill="#1B4E30"/>
+              <circle cx="38" cy="18" r="9" fill="#1B4E30"/>
               <path d="M 35,10 Q 52,4 58,8 Q 55,14 42,14 Z" fill="#C8860A"/>
               <path d="M 44,18 Q 68,16 70,20 Q 68,24 44,22 Z" fill="#CC1020"/>
-              <path d="M 4,28 Q -12,35 -8,42 Q 0,38 6,32 Z" fill="#1A0408"/>
-              <path d="M 2,32 Q -16,42 -10,50 Q -2,44 4,36 Z" fill="#1A0408"/>
-              <path d="M 10,22 Q 20,12 32,16 Q 28,28 14,30 Z" fill="#2A0610"/>
-              <circle cx="40" cy="16" r="2" fill="#FFD700"/>
+              <circle cx="40" cy="16" r="2" fill="#C8860A"/>
             </g>
 
             {/* Compass */}
             <g transform="translate(686,468)">
-              <circle cx="0" cy="0" r="11" fill="rgba(255,255,255,0.82)" stroke="rgba(204,16,32,0.3)" strokeWidth="0.8"/>
-              <text x="0" y="-3" fontSize="6.5" textAnchor="middle" fill="#CC1020" fontWeight="700" fontFamily="Inter,sans-serif">N</text>
-              <line x1="0" y1="-1.5" x2="0" y2="2" stroke="#CC1020" strokeWidth="0.9"/>
+              <circle cx="0" cy="0" r="11" fill="rgba(255,255,255,0.88)" stroke="rgba(27,78,48,0.25)" strokeWidth="0.8"/>
+              <text x="0" y="-3" fontSize="6.5" textAnchor="middle" fill="#1B4E30" fontWeight="700" fontFamily="sans-serif">N</text>
+              <line x1="0" y1="-1.5" x2="0" y2="2" stroke="#1B4E30" strokeWidth="0.9"/>
             </g>
           </svg>
 
           {/* Heat legend */}
           <div style={{ marginTop: '1rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem 1rem', justifyContent: 'center', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.7rem', color: '#9A5A5A', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Hearts:</span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--ink-muted)', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body, sans-serif)' }}>Hearts:</span>
             {([['< 15', 5], ['15–29', 18], ['30–54', 38], ['55+', 60]] as [string, number][]).map(([label, val]) => (
-              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.7rem', color: '#4A1A1A' }}>
-                <div style={{ width: 16, height: 10, borderRadius: 3, background: heatFill(val, false, false), border: '1px solid rgba(150,35,35,0.3)' }}/>
+              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.7rem', color: 'var(--ink-mid)', fontFamily: 'var(--font-body, sans-serif)' }}>
+                <div style={{ width: 16, height: 10, borderRadius: 3, background: heatFill(val, false, false), border: '1px solid var(--border)' }}/>
                 {label}
               </div>
             ))}
@@ -305,20 +298,21 @@ export default function SarawakMapSection() {
           {topDivisions.map((d, i) => (
             <div key={d.id} style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              background: i === 0 ? 'rgba(204,16,32,0.12)' : 'rgba(204,16,32,0.06)',
-              border: `1px solid rgba(204,16,32,${i === 0 ? 0.3 : 0.15})`,
-              borderRadius: 99, padding: '5px 14px', fontSize: '0.75rem', color: '#1A0408',
+              background: i === 0 ? 'var(--green-light)' : 'transparent',
+              border: `1px solid ${i === 0 ? 'var(--border)' : 'var(--border)'}`,
+              borderRadius: 99, padding: '5px 14px', fontSize: '0.75rem', color: 'var(--ink)',
+              fontFamily: 'var(--font-body, sans-serif)',
             }}>
-              <span style={{ color: '#CC1020', fontWeight: 800 }}>{i + 1}</span>
-              <span style={{ fontWeight: 700 }}>{d.name}</span>
-              <span style={{ color: '#CC1020' }}>❤ {hearts[d.id]}</span>
+              <span style={{ color: 'var(--gold)', fontWeight: 800 }}>{i + 1}</span>
+              <span style={{ fontWeight: 700, color: 'var(--green)' }}>{d.name}</span>
+              <span style={{ color: 'var(--ink-muted)' }}>{hearts[d.id]}</span>
             </div>
           ))}
         </motion.div>
 
         <motion.p
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.6 }}
-          style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.83rem', marginTop: '1.2rem' }}
+          style={{ textAlign: 'center', color: 'var(--ink-muted)', fontSize: '0.83rem', marginTop: '1.2rem', fontFamily: 'var(--font-body, sans-serif)' }}
         >
           {t(LANG_T.cta)}
         </motion.p>

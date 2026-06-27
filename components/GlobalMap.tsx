@@ -51,30 +51,24 @@ export default function GlobalMap() {
     startLng: m.longitude,
     endLat: SARAWAK.lat,
     endLng: SARAWAK.lng,
-    color: ['rgba(255,215,0,0.9)', 'rgba(232,25,44,0.9)'],
+    color: ['rgba(200,134,10,0.8)', 'rgba(238,245,240,0.4)'],
   }))
 
   return (
-    <section id="global-map" className="section-pad" style={{ background: '#1A0408', position: 'relative', overflow: 'hidden' }}>
-      <div style={{
-        position: 'absolute', top: '50%', left: '50%',
-        transform: 'translate(-50%,-50%)',
-        width: 700, height: 700, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(232,25,44,0.09) 0%, transparent 70%)',
-        pointerEvents: 'none',
-      }} />
+    <section id="global-map" className="section-pad" style={{ background: 'var(--green-dark)', position: 'relative', overflow: 'hidden' }}>
+      <div className="pua-stripe" style={{ position: 'absolute', top: 0, left: 0, right: 0 }} />
 
-      <div style={{ maxWidth: 1040, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8 }}
-          style={{ textAlign: 'center', marginBottom: '3rem' }}
+          style={{ textAlign: 'center', marginBottom: '3.5rem' }}
         >
-          <h2 className="section-title">{t(T.map.title) as string}</h2>
-          <p className="section-sub">{t(T.map.sub) as string}</p>
-          <div className="divider" />
+          <h2 className="section-title section-title--light">{t(T.map.title) as string}</h2>
+          <p className="section-sub section-sub--light">{t(T.map.sub) as string}</p>
+          <div className="rule" />
         </motion.div>
 
         <motion.div
@@ -83,16 +77,22 @@ export default function GlobalMap() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 1 }}
-          className="glass"
-          style={{ padding: '1.25rem', display: 'flex', justifyContent: 'center', position: 'relative' }}
+          style={{
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(238,245,240,0.08)',
+            borderRadius: 'var(--r-lg)',
+            padding: '1.25rem',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
         >
           <Globe
             width={renderDims.w}
             height={renderDims.h}
             backgroundColor="rgba(0,0,0,0)"
             globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-            atmosphereColor="#E8192C"
-            atmosphereAltitude={0.22}
+            atmosphereColor="#C8860A"
+            atmosphereAltitude={0.18}
             arcsData={arcsData}
             arcColor="color"
             arcDashLength={0.4}
@@ -109,11 +109,11 @@ export default function GlobalMap() {
 
               const dot = document.createElement('div')
               dot.style.cssText = `
-                width: 9px;
-                height: 9px;
+                width: 8px;
+                height: 8px;
                 border-radius: 50%;
-                background: #E8192C;
-                box-shadow: 0 0 6px 3px rgba(232,25,44,0.55), 0 0 14px 6px rgba(232,25,44,0.2);
+                background: #C8860A;
+                box-shadow: 0 0 6px 3px rgba(200,134,10,0.5), 0 0 14px 6px rgba(200,134,10,0.18);
                 animation: heartPulse 2.2s ease-in-out infinite;
               `
 
@@ -121,8 +121,8 @@ export default function GlobalMap() {
               label.textContent = m.city
               label.style.cssText = `
                 font-size: 8.5px;
-                font-family: Inter, sans-serif;
-                color: rgba(245,240,232,0.72);
+                font-family: sans-serif;
+                color: rgba(238,245,240,0.65);
                 white-space: nowrap;
                 letter-spacing: 0.4px;
                 text-shadow: 0 1px 5px rgba(0,0,0,1), 0 0 8px rgba(0,0,0,0.8);
@@ -141,7 +141,7 @@ export default function GlobalMap() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
-          style={{ textAlign: 'center', color: 'rgba(245,240,232,0.2)', fontSize: '0.78rem', marginTop: '1rem' }}
+          style={{ textAlign: 'center', color: 'rgba(238,245,240,0.25)', fontSize: '0.78rem', marginTop: '1rem', fontFamily: 'var(--font-body, sans-serif)' }}
         >
           {points.length} {t(T.map.hint) as string}
         </motion.p>

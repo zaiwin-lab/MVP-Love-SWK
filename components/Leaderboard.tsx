@@ -16,19 +16,25 @@ function Board({ title, items, icon, delay = 0 }: { title: string; items: Leader
   return (
     <motion.div
       ref={ref}
-      className="glass"
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, delay }}
-      style={{ flex: 1, minWidth: 280, padding: '2rem' }}
+      style={{
+        flex: 1,
+        minWidth: 280,
+        padding: '2rem',
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--r-lg)',
+        boxShadow: 'var(--shadow-sm)',
+      }}
     >
       <h3
-        className="font-playfair"
         style={{
-          fontSize: '1.35rem',
+          fontFamily: 'var(--font-display, serif)',
+          fontSize: '1.3rem',
           fontWeight: 700,
-          fontStyle: 'italic',
-          color: '#F5F0E8',
+          color: 'var(--ink)',
           marginBottom: '1.5rem',
           display: 'flex',
           alignItems: 'center',
@@ -47,40 +53,35 @@ function Board({ title, items, icon, delay = 0 }: { title: string; items: Leader
             transition={{ delay: delay + i * 0.08, duration: 0.5 }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '6px' }}>
-              {/* Medal or number */}
               <span style={{
-                width: 30, height: 30, borderRadius: '50%', flexShrink: 0,
-                background: i < 3 ? MEDAL_COLORS[i] : 'rgba(255,255,255,0.07)',
-                color: i < 3 ? '#000' : 'rgba(245,240,232,0.4)',
+                width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+                background: i < 3 ? MEDAL_COLORS[i] : 'var(--green-light)',
+                color: i < 3 ? '#000' : 'var(--ink-muted)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontWeight: 800, fontSize: i < 3 ? '0.9rem' : '0.78rem',
+                fontWeight: 800, fontSize: i < 3 ? '0.88rem' : '0.75rem',
+                fontFamily: 'var(--font-body, sans-serif)',
               }}>
                 {i < 3 ? MEDAL_LABELS[i] : i + 1}
               </span>
               <span style={{
                 flex: 1,
-                color: i < 3 ? '#FFD700' : 'rgba(245,240,232,0.75)',
+                color: i < 3 ? 'var(--green)' : 'var(--ink-mid)',
                 fontWeight: i < 3 ? 700 : 400,
                 fontSize: '0.92rem',
+                fontFamily: 'var(--font-body, sans-serif)',
               }}>
                 {item.name}
               </span>
-              <span style={{ color: '#E8192C', fontWeight: 800, fontSize: '0.85rem' }}>
-                {item.count} ❤️
+              <span style={{ color: 'var(--gold)', fontWeight: 800, fontSize: '0.85rem', fontFamily: 'var(--font-body, sans-serif)' }}>
+                {item.count}
               </span>
             </div>
-            {/* CSS bar */}
-            <div style={{ height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 99, overflow: 'hidden' }}>
+            <div style={{ height: 4, background: 'var(--border)', borderRadius: 99, overflow: 'hidden' }}>
               <motion.div
                 className="lb-bar"
                 initial={{ width: 0 }}
                 animate={inView ? { width: `${(item.count / maxCount) * 100}%` } : {}}
                 transition={{ duration: 1.2, delay: delay + i * 0.1 + 0.2, ease: 'easeOut' }}
-                style={{
-                  background: i < 3
-                    ? `linear-gradient(90deg, #E8192C, ${MEDAL_COLORS[i]})`
-                    : 'linear-gradient(90deg, rgba(232,25,44,0.5), rgba(255,215,0,0.5))',
-                }}
               />
             </div>
           </motion.div>
@@ -92,18 +93,18 @@ function Board({ title, items, icon, delay = 0 }: { title: string; items: Leader
 
 export default function Leaderboard() {
   return (
-    <section className="section-pad" style={{ background: '#0c0c18' }}>
-      <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <section className="section-pad" style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
+      <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8 }}
-          style={{ textAlign: 'center', marginBottom: '3rem' }}
+          style={{ textAlign: 'center', marginBottom: '3.5rem' }}
         >
-          <h2 className="section-title">Love Leaderboard</h2>
-          <p className="section-sub">Where in the world is love flowing from?</p>
-          <div className="divider" />
+          <h2 className="section-title">Where Love Flows From</h2>
+          <p className="section-sub">Countries and cities sending their support to Sarawak</p>
+          <div className="rule" />
         </motion.div>
 
         <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>

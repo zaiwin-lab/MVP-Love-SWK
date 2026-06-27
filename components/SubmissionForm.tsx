@@ -22,16 +22,17 @@ export default function SubmissionForm({ onSuccess }: Props) {
 
   const LABEL: React.CSSProperties = {
     display: 'block',
-    color: 'rgba(74,26,26,0.7)',
+    color: 'var(--ink-mid)',
     fontSize: '0.75rem',
     fontWeight: 700,
+    fontFamily: 'var(--font-body, sans-serif)',
     marginBottom: '7px',
     letterSpacing: '0.1em',
     textTransform: 'uppercase',
   }
 
-  const REQ = <span style={{ color: '#CC1020' }}>*</span>
-  const OPT = <span style={{ color: 'rgba(74,26,26,0.4)', fontWeight: 400 }}> ({t(T.form.optional) as string})</span>
+  const REQ = <span style={{ color: 'var(--red)' }}>*</span>
+  const OPT = <span style={{ color: 'var(--ink-faint)', fontWeight: 400 }}> ({t(T.form.optional) as string})</span>
 
   const set = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm(p => ({ ...p, [e.target.name]: e.target.value }))
@@ -73,9 +74,9 @@ export default function SubmissionForm({ onSuccess }: Props) {
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.8 }}
     >
-      <h2 className="section-title-light">{t(T.form.title) as string}</h2>
-      <p className="section-sub-light">{t(T.form.sub) as string}</p>
-      <div className="divider" />
+      <h2 className="section-title">{t(T.form.title) as string}</h2>
+      <p className="section-sub">{t(T.form.sub) as string}</p>
+      <div className="rule" />
 
       {/* Form card */}
       <div style={{ position: 'relative' }}>
@@ -146,7 +147,7 @@ export default function SubmissionForm({ onSuccess }: Props) {
                 <span style={{
                   fontSize: '0.75rem',
                   fontWeight: 700,
-                  color: charLeft < 50 ? '#CC1020' : 'rgba(74,26,26,0.35)',
+                  color: charLeft < 50 ? 'var(--red)' : 'var(--ink-faint)',
                   transition: 'color 0.2s',
                 }}>
                   {charLeft} left
@@ -179,7 +180,7 @@ export default function SubmissionForm({ onSuccess }: Props) {
                 onChange={e => setAgreed(e.target.checked)}
                 style={{ width: 20, height: 20, marginTop: 2, accentColor: '#CC1020', cursor: 'pointer', flexShrink: 0 }}
               />
-              <span style={{ color: 'rgba(74,26,26,0.7)', fontSize: '0.88rem', lineHeight: 1.6 }}>
+              <span style={{ color: 'var(--ink-mid)', fontSize: '0.88rem', lineHeight: 1.6, fontFamily: 'var(--font-body, sans-serif)' }}>
                 {t(T.form.agree) as string} 🌏
               </span>
             </label>

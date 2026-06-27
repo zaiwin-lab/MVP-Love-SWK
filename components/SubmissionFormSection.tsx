@@ -11,19 +11,14 @@ export default function SubmissionFormSection() {
   return (
     <section
       id="submission-form"
-      className="section-pad bg-pattern"
+      className="section-pad"
       style={{
-        background: '#FFF5EC',
+        background: 'var(--surface-green)',
+        borderTop: '1px solid var(--border)',
         position: 'relative',
         overflow: 'hidden',
       }}
     >
-      {/* Subtle warm atmosphere */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'radial-gradient(ellipse at 50% 0%, rgba(204,16,32,0.05) 0%, transparent 60%)',
-        pointerEvents: 'none',
-      }} />
 
       <div style={{ maxWidth: 680, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <AnimatePresence mode="wait">

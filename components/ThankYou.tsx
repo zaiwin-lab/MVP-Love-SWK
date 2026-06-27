@@ -65,25 +65,26 @@ export default function ThankYou({ data, onReset }: Props) {
         initial={{ opacity: 0, y: 28, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.3, type: 'spring', stiffness: 200, damping: 25 }}
-        className="glass-light"
+        className="card"
         style={{ padding: 'clamp(2rem, 5vw, 3.5rem)', position: 'relative', zIndex: 20 }}
       >
-        {/* Big animated heart */}
-        <motion.div
-          animate={{ scale: [1, 1.25, 1], rotate: [0, -5, 5, 0] }}
-          transition={{ duration: 1.2, times: [0, 0.4, 0.7, 1], delay: 0.5 }}
-          style={{ fontSize: '4.5rem', lineHeight: 1, marginBottom: '1.25rem' }}
-        >
-          ❤️
-        </motion.div>
+        {/* Hornbill icon as success mark */}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <svg viewBox="0 0 60 42" width="48" height="34" style={{ opacity: 0.7 }}>
+            <ellipse cx="24" cy="28" rx="20" ry="11" fill="#C8860A"/>
+            <circle cx="44" cy="16" r="8" fill="#C8860A"/>
+            <path d="M 42,8 Q 58,3 60,7 Q 57,12 46,11 Z" fill="#CC1020"/>
+            <path d="M 46,16 Q 62,14 62,18 Q 60,22 46,20 Z" fill="#CC1020"/>
+            <circle cx="46" cy="14" r="2" fill="#0F2E1C"/>
+          </svg>
+        </div>
 
         <h2
-          className="font-playfair"
           style={{
+            fontFamily: 'var(--font-display, serif)',
             fontSize: 'clamp(1.6rem, 4vw, 2.4rem)',
-            fontWeight: 800,
-            fontStyle: 'italic',
-            color: '#CC1020',
+            fontWeight: 700,
+            color: 'var(--green)',
             marginBottom: '1rem',
           }}
         >
@@ -92,25 +93,25 @@ export default function ThankYou({ data, onReset }: Props) {
 
         <p style={{
           fontSize: 'clamp(1rem, 1.8vw, 1.1rem)',
-          color: '#4A1A1A',
+          color: 'var(--ink-mid)',
+          fontFamily: 'var(--font-body, sans-serif)',
           lineHeight: 1.8,
-          marginBottom: '0.75rem',
           maxWidth: 460,
           margin: '0 auto 0.75rem',
         }}>
           {t(T.thankyou.sub) as string}
         </p>
 
-        <p style={{ color: '#CC1020', fontWeight: 600, fontSize: '1rem', marginBottom: '0.5rem' }}>
-          {t(T.thankyou.pin) as string} <strong>{city}, {country}</strong> 🌟
+        <p style={{ color: 'var(--green)', fontWeight: 600, fontSize: '1rem', marginBottom: '0.5rem', fontFamily: 'var(--font-body, sans-serif)' }}>
+          {t(T.thankyou.pin) as string} <strong>{city}, {country}</strong>
         </p>
 
-        <p style={{ color: '#9A5A5A', fontSize: '0.82rem', marginBottom: '2rem' }}>
-          Your message will appear on the map shortly after review. 💛
+        <p style={{ color: 'var(--ink-faint)', fontSize: '0.82rem', marginBottom: '2rem', fontFamily: 'var(--font-body, sans-serif)' }}>
+          Your message will appear on the map shortly after review.
         </p>
 
         {/* Share buttons */}
-        <p style={{ color: '#9A5A5A', fontSize: '0.8rem', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>
+        <p style={{ color: 'var(--ink-muted)', fontSize: '0.8rem', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem', fontFamily: 'var(--font-body, sans-serif)' }}>
           {t(T.thankyou.share) as string}
         </p>
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '1.75rem' }}>
@@ -155,12 +156,13 @@ export default function ThankYou({ data, onReset }: Props) {
           <button
             onClick={copyLink}
             style={{
-              background: copied ? 'rgba(204,16,32,0.12)' : 'rgba(204,16,32,0.08)',
-              border: '1px solid rgba(204,16,32,0.25)',
-              color: '#CC1020',
+              background: copied ? 'var(--green-light)' : 'transparent',
+              border: '1px solid var(--border)',
+              color: 'var(--green)',
               borderRadius: 99,
               padding: '11px 22px',
               fontWeight: 700,
+              fontFamily: 'var(--font-body, sans-serif)',
               fontSize: '0.88rem',
               cursor: 'pointer',
               display: 'flex',
@@ -177,28 +179,21 @@ export default function ThankYou({ data, onReset }: Props) {
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
           <button
             onClick={() => document.getElementById('global-map')?.scrollIntoView({ behavior: 'smooth' })}
-            style={{
-              background: 'rgba(204,16,32,0.08)',
-              border: '1px solid rgba(204,16,32,0.2)',
-              color: '#CC1020',
-              borderRadius: 12,
-              padding: '11px 22px',
-              fontWeight: 600,
-              fontSize: '0.88rem',
-              cursor: 'pointer',
-            }}
+            className="btn-outline"
+            style={{ fontSize: '0.88rem', padding: '11px 22px' }}
           >
-            🌍 See My Pin on the Map
+            See My Pin on the Map
           </button>
           <button
             onClick={onReset}
             style={{
-              background: 'rgba(74,26,26,0.04)',
-              border: '1px solid rgba(74,26,26,0.12)',
-              color: 'rgba(74,26,26,0.5)',
-              borderRadius: 12,
+              background: 'transparent',
+              border: '1px solid var(--border)',
+              color: 'var(--ink-muted)',
+              borderRadius: 'var(--r-md)',
               padding: '11px 22px',
               fontWeight: 600,
+              fontFamily: 'var(--font-body, sans-serif)',
               fontSize: '0.88rem',
               cursor: 'pointer',
             }}
@@ -208,7 +203,7 @@ export default function ThankYou({ data, onReset }: Props) {
         </div>
 
         {/* Auto scroll note */}
-        <p style={{ color: 'rgba(74,26,26,0.25)', fontSize: '0.74rem', marginTop: '1.5rem' }}>
+        <p style={{ color: 'var(--ink-faint)', fontSize: '0.74rem', marginTop: '1.5rem', fontFamily: 'var(--font-body, sans-serif)' }}>
           You&apos;ll be taken to the map in a moment…
         </p>
       </motion.div>

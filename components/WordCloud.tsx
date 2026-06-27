@@ -5,11 +5,11 @@ import { MOCK_WORDS } from '@/lib/mockData'
 import { useLang } from '@/contexts/LanguageContext'
 import { T } from '@/lib/translations'
 
-// Palette for word cloud on red bg: white, cream, gold, soft pinks
+// Palette for word cloud on dark green bg: cream, gold, light greens
 const PALETTE = [
-  '#ffffff', '#FFD700', '#ffe08a', '#fff3a3',
-  'rgba(255,255,255,0.9)', '#FFD700', '#ffffff', 'rgba(255,230,180,0.95)',
-  '#ffffff', 'rgba(255,215,0,0.85)', '#fff', 'rgba(255,255,255,0.8)',
+  '#EEF5F0', '#C8860A', '#F5E6C0', 'rgba(238,245,240,0.9)',
+  '#C8860A', '#EEF5F0', 'rgba(245,230,192,0.95)', '#EEF5F0',
+  'rgba(200,134,10,0.85)', '#EEF5F0', 'rgba(238,245,240,0.8)', '#C8860A',
 ]
 
 const FLOAT_DURATIONS = [2.6, 3.1, 2.3, 3.5, 2.8, 3.8, 2.4, 3.2, 2.9, 3.6, 2.7, 3.3, 2.5, 3.0, 3.4]
@@ -37,7 +37,7 @@ interface WordItemProps {
 function WordItem({ text, fontSize, color, isLarge, isMed, floatAmt, floatDur, floatDelay, entryDelay }: WordItemProps) {
   return (
     <motion.span
-      className="font-playfair"
+      className="font-display"
       initial={{ opacity: 0, scale: 0.4 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
@@ -69,7 +69,9 @@ export default function WordCloud() {
   const maxVal = Math.max(...MOCK_WORDS.map(w => w.value))
 
   return (
-    <section className="section-pad" style={{ background: 'linear-gradient(135deg, #CC1020 0%, #8B0010 100%)', position: 'relative', overflow: 'hidden' }}>
+    <section className="section-pad" style={{ background: 'var(--green-dark)', position: 'relative', overflow: 'hidden' }}>
+      <div className="pua-stripe" style={{ position: 'absolute', top: 0, left: 0, right: 0 }} />
+
       {/* Inline keyframes for word floating */}
       <style>{`
         @keyframes floatWord4 { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
@@ -79,29 +81,16 @@ export default function WordCloud() {
         @keyframes floatWord8 { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
       `}</style>
 
-      {/* Subtle glow on red bg */}
-      <div style={{
-        position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)',
-        width: 600, height: 600, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(255,180,0,0.12) 0%, transparent 70%)',
-        pointerEvents: 'none',
-      }} />
-
-      <div ref={ref} style={{ maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+      <div ref={ref} className="container" style={{ position: 'relative', zIndex: 1 }}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          style={{ textAlign: 'center', marginBottom: '3rem' }}
+          style={{ textAlign: 'center', marginBottom: '3.5rem' }}
         >
-          <h2 className="section-title-white">{t(T.words.title) as string}</h2>
-          <p className="section-sub-white">{t(T.words.sub) as string}</p>
-          <div style={{
-            width: 72, height: 3,
-            background: 'linear-gradient(90deg, rgba(255,255,255,0.9), rgba(255,215,0,0.9))',
-            margin: '1.25rem auto 3.5rem',
-            borderRadius: 2,
-          }} />
+          <h2 className="section-title section-title--light">{t(T.words.title) as string}</h2>
+          <p className="section-sub section-sub--light">{t(T.words.sub) as string}</p>
+          <div className="rule" />
         </motion.div>
 
         <motion.div
@@ -109,10 +98,9 @@ export default function WordCloud() {
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.3 }}
           style={{
-            background: 'rgba(0,0,0,0.12)',
-            backdropFilter: 'blur(4px)',
-            border: '1px solid rgba(255,255,255,0.15)',
-            borderRadius: 20,
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(238,245,240,0.08)',
+            borderRadius: 'var(--r-lg)',
             padding: 'clamp(2rem, 5vw, 3.5rem) 2rem',
             display: 'flex',
             flexWrap: 'wrap',
@@ -152,7 +140,7 @@ export default function WordCloud() {
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.7 }}
-          style={{ textAlign: 'center', color: 'rgba(255,255,255,0.5)', fontSize: '0.78rem', marginTop: '1.25rem' }}
+          style={{ textAlign: 'center', color: 'rgba(238,245,240,0.35)', fontSize: '0.78rem', marginTop: '1.25rem', fontFamily: 'var(--font-body, sans-serif)' }}
         >
           Submit your word below and watch it join the cloud
         </motion.p>

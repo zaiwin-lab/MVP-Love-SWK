@@ -45,18 +45,18 @@ export default function MessageWall() {
   const hasMore = visible < total
 
   return (
-    <section className="section-pad" style={{ background: '#FFFBF5', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 2 }}>
+    <section className="section-pad" style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
+      <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8 }}
-          style={{ textAlign: 'center', marginBottom: '3rem' }}
+          style={{ textAlign: 'center', marginBottom: '3.5rem' }}
         >
-          <h2 className="section-title-light">{t(T.wall.title) as string}</h2>
-          <p className="section-sub-light">{t(T.wall.sub) as string}</p>
-          <div className="divider" />
+          <h2 className="section-title">{t(T.wall.title) as string}</h2>
+          <p className="section-sub">{t(T.wall.sub) as string}</p>
+          <div className="rule" />
         </motion.div>
 
         <div style={{
@@ -68,7 +68,7 @@ export default function MessageWall() {
             {shown.map((msg, i) => (
               <motion.div
                 key={msg.id}
-                className="glass-light card-lift"
+                className="card card-lift"
                 style={{
                   padding: '1.75rem',
                   display: 'flex',
@@ -81,49 +81,52 @@ export default function MessageWall() {
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.5, delay: (i % 3) * 0.08 }}
               >
-                {/* Heart */}
-                <motion.div
-                  animate={{ scale: [1, 1.15, 1] }}
-                  transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.3, ease: 'easeInOut' }}
-                  style={{ fontSize: '1.6rem', lineHeight: 1 }}
-                >
-                  ❤️
-                </motion.div>
+                {/* Opening quote mark */}
+                <div style={{
+                  fontFamily: 'var(--font-display, serif)',
+                  fontSize: '2.5rem',
+                  lineHeight: 0.8,
+                  color: 'var(--gold)',
+                  opacity: 0.5,
+                }}>
+                  &ldquo;
+                </div>
 
                 {/* Quote */}
                 <p
-                  className="font-playfair"
                   style={{
-                    color: '#1A0408',
+                    fontFamily: 'var(--font-display, serif)',
+                    color: 'var(--ink-mid)',
                     lineHeight: 1.75,
-                    fontSize: '0.95rem',
+                    fontSize: '1rem',
                     fontStyle: 'italic',
                     flex: 1,
                   }}
                 >
-                  &ldquo;{msg.message.slice(0, 200)}{msg.message.length > 200 ? '…' : ''}&rdquo;
+                  {msg.message.slice(0, 200)}{msg.message.length > 200 ? '…' : ''}
                 </p>
 
                 {/* Attribution */}
-                <div style={{ borderTop: '1px solid rgba(204,16,32,0.12)', paddingTop: '0.875rem' }}>
-                  <div style={{ color: '#CC1020', fontWeight: 700, fontSize: '0.9rem' }}>
+                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.875rem' }}>
+                  <div style={{ color: 'var(--green)', fontWeight: 700, fontSize: '0.9rem', fontFamily: 'var(--font-body, sans-serif)' }}>
                     {msg.name || (t(T.wall.anon) as string)}
                   </div>
-                  <div style={{ color: '#9A5A5A', fontSize: '0.78rem', marginTop: '0.2rem' }}>
-                    📍 {msg.city}, {msg.country}
+                  <div style={{ color: 'var(--ink-faint)', fontSize: '0.78rem', marginTop: '0.2rem', fontFamily: 'var(--font-body, sans-serif)' }}>
+                    {msg.city}, {msg.country}
                   </div>
                   {msg.one_word && (
                     <span style={{
                       display: 'inline-block',
                       marginTop: '0.5rem',
-                      background: 'rgba(204,16,32,0.08)',
-                      border: '1px solid rgba(204,16,32,0.18)',
+                      background: 'var(--green-light)',
+                      border: '1px solid var(--border)',
                       borderRadius: 99,
                       padding: '2px 12px',
                       fontSize: '0.74rem',
-                      color: '#CC1020',
+                      color: 'var(--green)',
                       fontWeight: 600,
                       letterSpacing: '0.08em',
+                      fontFamily: 'var(--font-body, sans-serif)',
                     }}>
                       {msg.one_word}
                     </span>
@@ -136,7 +139,7 @@ export default function MessageWall() {
 
         {hasMore && (
           <motion.div
-            style={{ textAlign: 'center', marginTop: '2.5rem' }}
+            style={{ textAlign: 'center', marginTop: '3rem' }}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -144,31 +147,10 @@ export default function MessageWall() {
             <button
               onClick={loadMore}
               disabled={loading}
-              style={{
-                padding: '14px 44px',
-                fontSize: '1rem',
-                border: '2px solid #CC1020',
-                borderRadius: 14,
-                background: 'transparent',
-                color: '#CC1020',
-                fontWeight: 700,
-                cursor: loading ? 'wait' : 'pointer',
-                transition: 'all 0.2s',
-                letterSpacing: '0.04em',
-                opacity: loading ? 0.6 : 1,
-              }}
-              onMouseOver={e => {
-                if (!loading) {
-                  (e.target as HTMLButtonElement).style.background = '#CC1020'
-                  ;(e.target as HTMLButtonElement).style.color = '#fff'
-                }
-              }}
-              onMouseOut={e => {
-                (e.target as HTMLButtonElement).style.background = 'transparent'
-                ;(e.target as HTMLButtonElement).style.color = '#CC1020'
-              }}
+              className="btn-outline"
+              style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'wait' : 'pointer' }}
             >
-              {loading ? 'Loading…' : `${t(T.wall.loadMore) as string} ❤️`}
+              {loading ? 'Loading…' : (t(T.wall.loadMore) as string)}
             </button>
           </motion.div>
         )}

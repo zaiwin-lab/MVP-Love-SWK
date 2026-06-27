@@ -1,17 +1,19 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Inter } from 'next/font/google'
+import { EB_Garamond, Source_Sans_3 } from 'next/font/google'
 import './globals.css'
 import { LanguageProvider } from '@/contexts/LanguageContext'
 
-const playfair = Playfair_Display({
+const garamond = EB_Garamond({
   subsets: ['latin'],
-  variable: '--font-playfair',
+  variable: '--font-display',
+  weight: ['400', '500', '600', '700', '800'],
   display: 'swap',
 })
 
-const inter = Inter({
+const sourceSans = Source_Sans_3({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-body',
+  weight: ['300', '400', '600', '700'],
   display: 'swap',
 })
 
@@ -38,8 +40,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
-      <body className="antialiased" style={{ background: '#FFFBF5', color: '#1A0408' }}>
+    <html lang="en" className={`${garamond.variable} ${sourceSans.variable}`}>
+      <body className="antialiased" style={{ background: '#F7F8F5', color: '#0F1F15' }}>
         <LanguageProvider>
           {children}
         </LanguageProvider>
