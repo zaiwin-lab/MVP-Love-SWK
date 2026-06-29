@@ -1,9 +1,11 @@
 'use client'
 import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { MOCK_WORDS } from '@/lib/mockData'
 import { useLang } from '@/contexts/LanguageContext'
 import { T } from '@/lib/translations'
+
+interface WordStat { word: string; count: number }
 
 // Palette for word cloud on dark green bg: cream, gold, light greens
 const PALETTE = [
@@ -17,9 +19,9 @@ const FLOAT_DELAYS    = [0.0, 0.3, 0.6, 0.9, 0.2, 0.5, 0.8, 0.1, 0.4, 0.7, 0.15,
 
 // Hero word overrides for big impact
 const HERO_WORDS: Record<string, number> = {
-  'Home': 5,
-  'Family': 4.5,
-  'Beautiful': 4,
+  'home': 5,
+  'family': 4.5,
+  'beautiful': 4,
 }
 
 interface WordItemProps {
@@ -66,7 +68,20 @@ export default function WordCloud() {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const { t } = useLang()
-  const maxVal = Math.max(...MOCK_WORDS.map(w => w.value))
+  const [words, setWords] = useState<{ text: string; value: number }[]>(MOCK_WORDS)
+
+  useEffect(() => {
+    fetch('/api/messages?limit=1')
+      .then(r => r.json())
+      .then((data: { wordStats?: WordStat[] }) => {
+        if (data.wordStats && data.wordStats.length > 0) {
+          setWords(data.wordStats.map((w: WordStat) => ({ text: w.word, value: w.count })))
+        }
+      })
+      .catch(() => {/* keep mock */})
+  }, [])
+
+  const maxVal = Math.max(...words.map(w => w.value), 1)
 
   return (
     <section className="section-pad" style={{ background: 'var(--green-dark)', position: 'relative', overflow: 'hidden' }}>
@@ -110,10 +125,9 @@ export default function WordCloud() {
             minHeight: 320,
           }}
         >
-          {MOCK_WORDS.map((word, i) => {
+          {words.map((word, i) => {
             const ratio = word.value / maxVal
-            // Check for hero word override
-            const heroSize = HERO_WORDS[word.text]
+            const heroSize = HERO_WORDS[word.text.toLowerCase()]
             const fontSize = heroSize ?? (0.78 + ratio * 2.4)
             const color = PALETTE[i % PALETTE.length]
             const isLarge = heroSize ? true : ratio > 0.65

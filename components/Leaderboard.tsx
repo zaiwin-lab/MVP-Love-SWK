@@ -1,5 +1,5 @@
 'use client'
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { MOCK_COUNTRIES, MOCK_CITIES } from '@/lib/mockData'
 
@@ -11,7 +11,7 @@ const MEDAL_LABELS = ['🥇', '🥈', '🥉']
 function Board({ title, items, icon, delay = 0 }: { title: string; items: LeaderItem[]; icon: string; delay?: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
-  const maxCount = Math.max(...items.map(i => i.count))
+  const maxCount = Math.max(...items.map(i => i.count), 1)
 
   return (
     <motion.div
@@ -91,7 +91,26 @@ function Board({ title, items, icon, delay = 0 }: { title: string; items: Leader
   )
 }
 
+interface ApiStat { name: string; count: number }
+
 export default function Leaderboard() {
+  const [countries, setCountries] = useState<LeaderItem[]>(MOCK_COUNTRIES)
+  const [cities, setCities] = useState<LeaderItem[]>(MOCK_CITIES)
+
+  useEffect(() => {
+    fetch('/api/messages?limit=1')
+      .then(r => r.json())
+      .then((data: { countryStats?: ApiStat[]; cityStats?: ApiStat[] }) => {
+        if (data.countryStats && data.countryStats.length > 0) {
+          setCountries(data.countryStats.slice(0, 7))
+        }
+        if (data.cityStats && data.cityStats.length > 0) {
+          setCities(data.cityStats.slice(0, 7))
+        }
+      })
+      .catch(() => {/* keep mock */})
+  }, [])
+
   return (
     <section className="section-pad" style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
       <div className="container">
@@ -108,8 +127,8 @@ export default function Leaderboard() {
         </motion.div>
 
         <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
-          <Board title="Top Countries" items={MOCK_COUNTRIES} icon="🌍" delay={0} />
-          <Board title="Top Cities" items={MOCK_CITIES} icon="🏙️" delay={0.15} />
+          <Board title="Top Countries" items={countries} icon="🌍" delay={0} />
+          <Board title="Top Cities" items={cities} icon="🏙️" delay={0.15} />
         </div>
       </div>
     </section>
